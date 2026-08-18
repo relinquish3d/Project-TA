@@ -10,6 +10,16 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+    public function SentInvite()
+    {
+        return $this->hasMany(Invite::Class, 'sender_id');
+    }
+
+    public function receivedInvite()
+    {
+        return $this->hasMany(Invite::Class, 'receiver_id');
+    }
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
