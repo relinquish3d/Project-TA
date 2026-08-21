@@ -11,6 +11,8 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
 
+    protected $primaryKey = 'id_user';
+
     public function SentInvite()
     {
         return $this->hasMany(Invite::Class, 'sender_id');
