@@ -40,8 +40,8 @@
     </div>
 
     <div class="flex flex-row gap-4 items-center justify-center">
-      <a class="text-gray-950 font-bold px-4 py-2" href="#">Sign In</a>
-      <a class="text-gray-950 font-bold px-4 py-2" href="#">Login</a>
+      <a class="text-gray-950 font-bold px-4 py-2" href="register">Sign In</a>
+      <a class="text-gray-950 font-bold px-4 py-2" href="login">Login</a>
     </div>
   </nav>
 
