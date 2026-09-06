@@ -1,10 +1,10 @@
 <x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
-        <div class="w-full max-w-4xl h-[640px] bg-white border-4 border-blue-500 rounded-2xl grid grid-cols-2 overflow-hidden">
+    <div class="min-h-screen flex items-center justify-center bg-black">
+        <div class="w-full max-w-4xl h-[640px] bg-white border-4 border-blue-950 rounded-4xl grid grid-cols-2 overflow-hidden">
 
             {{-- Kolom Kiri: Logo --}}
-            <div class="min-w-0 h-full bg-gray-300 p-6 flex items-center justify-center">
-                <div class="w-full h-full bg-gray-200 rounded-3xl border border-gray-400 flex flex-col items-center justify-between py-6">
+            <div class="min-w-0 h-full rounded-4xl bg-gray-300 p-6 flex items-center justify-center">
+                <div class="w-full h-full bg-gray-200 rounded-4xl border border-gray-400 flex flex-col items-center justify-between py-6">
 
                     {{-- Notch / status bar --}}
                     <div class="flex items-center gap-2">
@@ -15,10 +15,7 @@
 
                     {{-- Logo --}}
                     <div class="flex-1 flex items-center justify-center">
-                        <svg viewBox="0 0 200 200" class="w-48 h-48">
-                            <polygon points="100,20 115,90 185,100 115,110 100,180 85,110 15,100 85,90"
-                                     fill="#4c3a8f" stroke="#5ee3f0" stroke-width="3"/>
-                        </svg>
+                        <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-48 h-48 object-contain">
                     </div>
 
                     {{-- Brand name --}}
@@ -41,8 +38,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                             <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
-                                   autocomplete="name" placeholder="Add name" style="color-scheme: light"
-                                   class="w-full border-0 focus:ring-0 p-0 text-sm bg-white text-gray-900 italic placeholder-gray-400">
+                                autocomplete="name" placeholder="Add name" style="color-scheme: light"
+                                class="h-7 w-100 border-0 focus:ring-0 p-0 text-sm bg-white text-gray-900 italic placeholder-gray-400">
                         </div>
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
@@ -55,8 +52,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                             <input id="email" type="email" name="email" value="{{ old('email') }}" required
-                                   autocomplete="username" placeholder="Example@example.com" style="color-scheme: light"
-                                   class="w-full border-0 focus:ring-0 p-0 text-sm bg-white text-gray-900 italic placeholder-gray-400">
+                                autocomplete="username" placeholder="Example@example.com" style="color-scheme: light"
+                                class="h-7 w-100 border-0 focus:ring-0 p-0 text-sm bg-white text-gray-900 italic placeholder-gray-400">
                         </div>
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
@@ -69,8 +66,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                             <input id="password" type="password" name="password" required
-                                   autocomplete="new-password" placeholder="********" style="color-scheme: light"
-                                   class="w-full border-0 focus:ring-0 p-0 text-sm bg-white text-gray-900 placeholder-gray-400">
+                                autocomplete="new-password" placeholder="********" style="color-scheme: light"
+                                class="h-7 w-100 border-0 focus:ring-0 p-0 text-sm bg-white text-gray-900 placeholder-gray-400">
                         </div>
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
@@ -83,8 +80,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
                             <input id="password_confirmation" type="password" name="password_confirmation" required
-                                   autocomplete="new-password" placeholder="********" style="color-scheme: light"
-                                   class="w-full border-0 focus:ring-0 p-0 text-sm bg-white text-gray-900 placeholder-gray-400">
+                                autocomplete="new-password" placeholder="********" style="color-scheme: light"
+                                class="h-7 w-100 border-0 focus:ring-0 p-0 text-sm bg-white text-gray-900 placeholder-gray-400">
                         </div>
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                     </div>
@@ -92,7 +89,7 @@
                     {{-- Tombol Next --}}
                     <div class="pt-2">
                         <button type="submit"
-                                class="w-full border border-gray-300 rounded-full py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                            class="w-full border border-gray-300 rounded-full py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
                             {{ __('Next') }}
                         </button>
                     </div>
@@ -103,30 +100,6 @@
                     Login with SSO/
                     <a href="{{ route('login') }}" class="text-blue-600 font-medium hover:underline">{{ __('Login') }}</a>
                 </p>
-
-                {{-- Social Login --}}
-                <div class="mt-4 space-y-3">
-                    <button type="button"
-                            class="w-full flex items-center gap-3 border border-gray-300 rounded-full px-4 py-2 hover:bg-gray-50 transition">
-                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47a5.54 5.54 0 01-2.4 3.63v3.02h3.86c2.26-2.08 3.56-5.14 3.56-8.89z"/>
-                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3.02c-1.07.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.28v3.11A11.997 11.997 0 0012 24z"/>
-                            <path fill="#FBBC05" d="M5.27 14.26A7.2 7.2 0 014.9 12c0-.78.14-1.55.37-2.26V6.63H1.28A11.997 11.997 0 000 12c0 1.93.46 3.76 1.28 5.37l3.99-3.11z"/>
-                            <path fill="#EA4335" d="M12 4.77c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.94 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.28 6.63l3.99 3.11C6.22 6.88 8.87 4.77 12 4.77z"/>
-                        </svg>
-                        <span class="text-sm italic text-gray-700">Continue with Google</span>
-                    </button>
-
-                    <p class="text-center text-xs text-gray-400">or</p>
-
-                    <button type="button"
-                            class="w-full flex items-center gap-3 border border-gray-300 rounded-full px-4 py-2 hover:bg-gray-50 transition">
-                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="#1877F2">
-                            <path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/>
-                        </svg>
-                        <span class="text-sm italic text-gray-700">Continue with Facebook</span>
-                    </button>
-                </div>
             </div>
 
         </div>
