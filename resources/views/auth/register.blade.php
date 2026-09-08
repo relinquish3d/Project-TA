@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="min-h-screen flex items-center justify-center bg-white">
-        <div class="w-full max-w-4xl h-[580px] bg-white border-4 border-blue-950 rounded-4xl grid grid-cols-2 overflow-hidden">
+        <div class="w-full max-w-4xl h-[580px] bg-white border-4 border-blue-950 rounded-4xl grid grid-cols-2 overflow-hidden shadow-2xl">
 
             {{-- Kolom Kiri: Logo --}}
             <div class="min-w-0 h-full rounded-3xl bg-gray-300 p-6 flex items-center justify-center">
@@ -15,7 +15,9 @@
 
                     {{-- Logo --}}
                     <div class="flex-1 flex items-center justify-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-48 h-48 object-contain">
+                        <a href="{{ url('/') }}">
+                            <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-[300px] h-[400px] object-contain hover:animate-spin">
+                        </a>
                     </div>
 
                     {{-- Brand name --}}
