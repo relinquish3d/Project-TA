@@ -10,43 +10,38 @@
 
 <body class="bg-[#FDFCF8]">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
-  <nav class="w-full fixed top-0 z-100 flex flex-row h-max p-4 bg-[#A6A6A6] backdrop-blur-2xl border-b border-gray-200 items-center justify-between">
-    <div class="w-max flex flex-row gap-4 items-center">
-      <a href="#">
-        <div class="flex flex-row gap-2 items-center justify-center">
-          <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-10 h-10 object-contain">
-              <pattern id="pattern0_178_34" patternContentUnits="objectBoundingBox" width="1" height="1">
-                <use xlink:href="#image0_178_34" transform="matrix(0.00309962 0 0 0.00353357 -0.00368855 0)" />
-              </pattern>
-            </defs>
-          </svg>
-      </a>
-      <p class="text-[#000] font-bold">
-        Play All
-      </p> 
+  <nav class="w-full fixed top-0 z-50 flex flex-row h-16 px-6 bg-[#D9D9D9] border-b border-gray-300 items-center justify-between shadow-xs">
+    <!-- Logo & Brand -->
+    <div class="flex items-center gap-3">
+        <a href="#" class="flex items-center gap-2">
+            <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-9 h-9 object-contain">
+        </a>
+        <span class="text-xl font-bold tracking-tight text-black">
+            PlayAll
+        </span> 
     </div>
 
-    <form>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
-      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-      class="lucide lucide-search absolute top-1/2 -translate-y-2 left-38 h-4 w-4"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-      <label for="search" class="sr-only">Search</label>
-
-      <input type="text" class="rounded-full px-4 py-1 border border-[#000]" placeholder="Cari Teman...">
-    </form>
-
-    <div class="flex flex-row gap-6 items-center justify-center">
-
-      <a class="text-[#000] px-4 py-2" href="#">Chat</a>
-      <a class="text-[#000] px-4 py-2" href="#gameFavorite">Game Favorite</a>
-      <a class="text-[#000] px-4 py-2" href="#">Home</a>
+    <!-- Search Bar -->
+    <div class="relative flex items-center">
+        <span class="absolute left-3.5 text-gray-500 flex items-center pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </span>
+        <input type="text" class="w-64 rounded-full pl-10 pr-4 py-1.5 text-sm bg-transparent border border-gray-400 text-black placeholder-gray-500 focus:outline-none focus:border-black" placeholder="Cari teman...">
     </div>
 
-    <div class="flex flex-row gap-4 items-center justify-center">
-      <a class="text-gray-950 font-bold px-4 py-1 hover:underline transition-colors duration-150" href="register">Sign In</a>
-      <a class="text-gray-950 font-bold px-4 py-1 hover:underline transition-colors duration-150" href="login">Login</a>
+    <!-- Navigation Links -->
+    <div class="flex items-center gap-8">
+        <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#">Chat</a>
+        <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite">Game Favorit</a>
+        <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#">Home</a>
     </div>
-  </nav>
+
+    <!-- Auth Actions -->
+    <div class="flex items-center gap-6">
+        <a class="text-black font-bold text-sm hover:underline transition-colors" href="register">Sign In</a>
+        <a class="text-black font-bold text-sm hover:underline transition-colors" href="login">Login</a>
+    </div>
+</nav>
 
   <div class="flex flex-row items-center justify-center flex-col gap-100 mt-55 mb-60 p-8 h-fill bg-[#FDFCF8]">
     <div class=" order-1 flex flex-col w-100">
@@ -80,7 +75,7 @@
         <a href="#">
             <img class="w-full h-auto" src="{{ asset('images/Game/ML.png') }}" alt="Mobile Legends" />
         </a>
-        <div class="p-9 text-left">
+        <div class="p-4 text-left">
             <div class="flex justify-between items-center text-[10px] text-gray-600 font-semibold mb-1">
                 <span>MOBA 5V5</span>
                 <span>Ranked / Classic</span>
@@ -96,7 +91,7 @@
         <a href="#">
             <img class="w-full h-auto" src="{{ asset('images/Game/pubg.png') }}" alt="PUBG Mobile" />
         </a>
-        <div class="p-9 text-left">
+        <div class="p-4 text-left">
             <div class="flex justify-between items-center text-[10px] text-gray-600 font-semibold mb-1">
                 <span>BATTLE ROYALE</span>
                 <span>Squad / Duo</span>
@@ -112,7 +107,7 @@
         <a href="#">
             <img class="w-full h-auto" src="{{ asset('images/Game/valorant.png') }}" alt="Valorant" />
         </a>
-        <div class="p-9 text-left">
+        <div class="p-4 text-left">
             <div class="flex justify-between items-center text-[10px] text-gray-600 font-semibold mb-1">
                 <span>TACTICAL SHOOTER</span>
                 <span>Competitive 5v5</span>
@@ -128,7 +123,7 @@
         <a href="#">
             <img class="w-full h-auto" src="{{ asset('images/Game/FC.png') }}" alt="FC Mobile" />
         </a>
-        <div class="p-9 text-left">
+        <div class="p-4 text-left">
             <div class="flex justify-between items-center text-[10px] text-gray-600 font-semibold mb-1">
                 <span>SPORTS SIMULATION</span>
                 <span>1v1 Head-to-Head</span>
@@ -141,10 +136,393 @@
 
   </div>
   </section>
-    <!-- Kategori Game -->
-<div class="flex flex-col gap-1 p-30 bg-[#FDFCF8]">
-    <h1 class="text-3xl font-bold">Mobile legends</h1>
+
+<div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6">
+    <!-- Judul Halaman -->
+    <h1 class="text-2xl flex justify-start w-full font-bold text-black mt-20 px-9 pl-35">Mobile Legends</h1>
+
+    <!-- Container Grid untuk 4 Card -->
+<div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
+    
+    <!-- Card 1: Songmin -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Songmin</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 2: Michh -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Michh</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 3: Lizz -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Lizz</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 4: Asa -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Asa</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
 </div>
+</div>
+
+<div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6">
+    <!-- Judul Halaman -->
+    <h1 class="text-2xl flex justify-start w-full font-bold text-black mt-20 px-9 pl-35">PUBG</h1>
+
+    <!-- Container Grid untuk 4 Card -->
+<div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
+    
+    <!-- Card 1: Songmin -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Songmin</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 2: Michh -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Michh</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 3: Lizz -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Lizz</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 4: Asa -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Asa</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+</div> 
+</div>
+
+<div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6">
+    <!-- Judul Halaman -->
+    <h1 class="text-2xl flex justify-start w-full font-bold text-black mt-20 px-9 pl-35">Valorant</h1>
+
+    <!-- Container Grid untuk 4 Card -->
+<div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
+    
+    <!-- Card 1: Songmin -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Songmin</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 2: Michh -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Michh</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 3: Lizz -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Lizz</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 4: Asa -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Asa</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6">
+    <!-- Judul Halaman -->
+    <h1 class="text-2xl flex justify-start w-full font-bold text-black mt-20 px-9 pl-35">FC Mobile</h1>
+
+    <!-- Container Grid untuk 4 Card -->
+<div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
+    
+    <!-- Card 1: Songmin -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Songmin</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 2: Michh -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Michh</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 3: Lizz -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Lizz</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 4: Asa -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" />
+        </a>
+        <div class="p-4 text-left">
+            <!-- Bintang Rating -->
+            <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <!-- Nama Pemain -->
+            <h5 class="text-base font-bold tracking-tight text-black mb-3">Asa</h5>
+            <!-- Tombol Add + -->
+            <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">
+                Add +
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Footer Section -->
+<footer class="bg-[#E5E5E5] text-black py-12 px-6 md:px-16 lg:px-24">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
+        
+        <!-- Bagian Logo & Nama Brand -->
+        <div class="flex items-center gap-5">
+            <img src="{{asset('images/logo.png') }}" alt="PlayAll Logo" class="w-35 h-35 object-contain" />
+            <span class="text-2xl font-bold tracking-tight text-black">PlayAll</span>
+        </div>
+
+        <!-- Bagian Menu Navigasi & Account -->
+        <div class="flex md:gap-32">
+            
+            <!-- Column 1: Navigation -->
+            <div>
+                <h3 class="font-bold text-lg mb-4 text-black">Navigation</h3>
+                <ul class="space-y-3 text-sm text-gray-800">
+                    <li>
+                        <a href="#" class="hover:text-black transition-colors">Chat</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-black transition-colors">Game Favorite</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-black transition-colors">Home</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Column 2: Account -->
+            <div>
+                <h3 class="font-bold text-lg mb-4 text-black">Account</h3>
+                <ul class="space-y-3 text-sm text-gray-800">
+                    <li>
+                        <a href="#" class="hover:text-black transition-colors">Sign in</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:text-black transition-colors">Login</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</footer>
 
 </body>
 
