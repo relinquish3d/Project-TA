@@ -18,7 +18,7 @@
         </a>
         <span class="text-xl font-bold tracking-tight text-black">
             PlayAll
-        </span> 
+        </span>
     </div>
 
     <!-- Search Bar -->
@@ -49,9 +49,9 @@
       <br>
       <p class="rounded-5xl text-md font-light flex-col">
       Bosan bermain sendiri, ingin mendapatkan teman mabar?
-      Di sini kamu dapat menemukan teman mabar yang sesuai 
+      Di sini kamu dapat menemukan teman mabar yang sesuai
       dengan game yang kamu mainkan
-      </p> 
+      </p>
     </div>
     <div class="order-2 flex flex-row items-center justify-right gap-4">
      <img style="border-radius: 7rem;" src="{{ asset('images/game.png') }}" class="drop-shadow-[-18px_10px_3px_#A6A6A6] w-130  block" alt="bayangan kiri">
@@ -69,7 +69,7 @@
 
 <!-- Container Pembungkus Card (Berjejer 4 Game di Tengah dengan Efek Hover) -->
 <div class="max-w-8xl mx-auto flex flex-wrap justify-center gap-10 p-20 bg-[#FDFCF8]">
-    
+
     <!-- Card 1: Mobile Legends -->
     <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
         <a href="#">
@@ -143,7 +143,7 @@
 
     <!-- Container Grid untuk 4 Card -->
 <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
-    
+
     <!-- Card 1: Songmin -->
     <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
         <a href="#">
@@ -228,7 +228,7 @@
 
     <!-- Container Grid untuk 4 Card -->
 <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
-    
+
     <!-- Card 1: Songmin -->
     <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
         <a href="#">
@@ -304,7 +304,7 @@
             </a>
         </div>
     </div>
-</div> 
+</div>
 </div>
 
 <div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6">
@@ -313,7 +313,7 @@
 
     <!-- Container Grid untuk 4 Card -->
 <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
-    
+
     <!-- Card 1: Songmin -->
     <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
         <a href="#">
@@ -398,7 +398,7 @@
 
     <!-- Container Grid untuk 4 Card -->
 <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
-    
+
     <!-- Card 1: Songmin -->
     <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
         <a href="#">
@@ -480,7 +480,7 @@
 <!-- Footer Section -->
 <footer class="bg-[#E5E5E5] text-black py-12 px-6 md:px-16 lg:px-24">
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
-        
+
         <!-- Bagian Logo & Nama Brand -->
         <div class="flex items-center gap-5">
             <img src="{{asset('images/logo.png') }}" alt="PlayAll Logo" class="w-35 h-35 object-contain" />
@@ -489,7 +489,7 @@
 
         <!-- Bagian Menu Navigasi & Account -->
         <div class="flex md:gap-32">
-            
+
             <!-- Column 1: Navigation -->
             <div>
                 <h3 class="font-bold text-lg mb-4 text-black">Navigation</h3>
