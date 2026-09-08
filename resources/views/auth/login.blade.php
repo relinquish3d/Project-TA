@@ -92,10 +92,9 @@
                     </div>
 
                     {{-- Logo --}}
-                    <div class="flex-1 flex items-center justify-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-48 h-48 object-contain">
-                    </div>
-
+                    <button class="flex-1 flex items-center justify-center">
+                        <img href="/landingPage" src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-48 h-48 object-contain">
+                    </button>
                     {{-- Brand name --}}
                     <p class="text-2xl font-extrabold italic text-gray-900">PlayAll</p>
                 </div>
