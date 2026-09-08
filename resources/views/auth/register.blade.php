@@ -16,7 +16,7 @@
                     {{-- Logo --}}
                     <div class="flex-1 flex items-center justify-center">
                         <a href="{{ url('/') }}">
-                            <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-[300px] h-[400px] object-contain hover:animate-spin">
+                            <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-[300px] h-[400px] object-contain hover:blur-sm hover:animate-spin hover:transition-20 hover:duration-500">
                         </a>
                     </div>
 
