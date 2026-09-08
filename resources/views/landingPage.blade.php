@@ -8,9 +8,9 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-[#D9D9D9]">
+<body class="bg-[#FDFCF8]">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
-  <nav class="w-full flex flex-row h-max p-4 bg-[#A6A6A6] backdrop-blur-2xl border-b border-gray-200 items-center justify-between">
+  <nav class="w-full fixed top-0 z-100 flex flex-row h-max p-4 bg-[#A6A6A6] backdrop-blur-2xl border-b border-gray-200 items-center justify-between">
     <div class="w-max flex flex-row gap-4 items-center">
       <a href="#">
         <div class="flex flex-row gap-2 items-center justify-center">
@@ -34,7 +34,7 @@
 
     <div class="flex flex-row gap-6 items-center justify-center">
       <a class="text-[#000] px-4 py-2" href="#">Chat</a>
-      <a class="text-[#000] px-4 py-2" href="#">Game Favorite</a>
+      <a class="text-[#000] px-4 py-2" href="#gameFavorite">Game Favorite</a>
       <a class="text-[#000] px-4 py-2" href="#">Home</a>
     </div>
 
@@ -44,7 +44,7 @@
     </div>
   </nav>
 
-  <div class="flex flex-row items-center justify-center flex-col gap-70 mt-20 p-8 h-fill bg-[#D9D9D9]">
+  <div class="flex flex-row items-center justify-center flex-col gap-100 mt-55 mb-60 p-8 h-fill bg-[#FDFCF8]">
     <div class=" order-1 flex flex-col w-100">
       <h1 class=" text-5xl w-100 font-bold text-4xl">Temukan Teman Mabar Mu Di Sini</h1>
       <br>
@@ -59,11 +59,89 @@
     </div>
   </div>
 
-  <div class="flex flex-col items-center justify-center gap-4 mt-20 p-8 h-fill bg-[#D9D9D9]">
+<section id="gameFavorite" class="pt-20">
+<!-- Bagian Judul -->
+<div class="flex flex-col items-center justify-center gap-1 p-8 bg-[#FDFCF8]">
     <h1 class="text-3xl font-bold">Pilih Game Favoritmu</h1>
     <br>
-    <p>MABAR mendukung empat game kompetitif terbesar saat ini. Temukan partner bermain untuk setiap platform favoritmu.</p>    
+    <p>MABAR mendukung empat game kompetitif terbesar saat ini. Temukan partner bermain</p>
+    <p>untuk setiap platform favoritmu.</p>
+</div>
+
+<!-- Container Pembungkus Card (Berjejer 4 Game di Tengah dengan Efek Hover) -->
+<div class="max-w-8xl mx-auto flex flex-wrap justify-center gap-10 p-20 bg-[#FDFCF8]">
+    
+    <!-- Card 1: Mobile Legends -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto" src="{{ asset('images/Game/ML.png') }}" alt="Mobile Legends" />
+        </a>
+        <div class="p-9 text-left">
+            <div class="flex justify-between items-center text-[10px] text-gray-600 font-semibold mb-1">
+                <span>MOBA 5V5</span>
+                <span>Ranked / Classic</span>
+            </div>
+            <a href="#">
+                <h5 class="text-base font-bold tracking-tight text-black">Mobile Legends</h5>
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 2: PUBG Mobile -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto" src="{{ asset('images/Game/pubg.png') }}" alt="PUBG Mobile" />
+        </a>
+        <div class="p-9 text-left">
+            <div class="flex justify-between items-center text-[10px] text-gray-600 font-semibold mb-1">
+                <span>BATTLE ROYALE</span>
+                <span>Squad / Duo</span>
+            </div>
+            <a href="#">
+                <h5 class="text-base font-bold tracking-tight text-black">PUBG Mobile</h5>
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 3: Valorant -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto" src="{{ asset('images/Game/valorant.png') }}" alt="Valorant" />
+        </a>
+        <div class="p-9 text-left">
+            <div class="flex justify-between items-center text-[10px] text-gray-600 font-semibold mb-1">
+                <span>TACTICAL SHOOTER</span>
+                <span>Competitive 5v5</span>
+            </div>
+            <a href="#">
+                <h5 class="text-base font-bold tracking-tight text-black">Valorant</h5>
+            </a>
+        </div>
+    </div>
+
+    <!-- Card 4: FC Mobile -->
+    <div class="bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+        <a href="#">
+            <img class="w-full h-auto" src="{{ asset('images/Game/FC.png') }}" alt="FC Mobile" />
+        </a>
+        <div class="p-9 text-left">
+            <div class="flex justify-between items-center text-[10px] text-gray-600 font-semibold mb-1">
+                <span>SPORTS SIMULATION</span>
+                <span>1v1 Head-to-Head</span>
+            </div>
+            <a href="#">
+                <h5 class="text-base font-bold tracking-tight text-black">FC Mobile</h5>
+            </a>
+        </div>
+    </div>
+
   </div>
+  </section>
+    <!-- Kategori Game -->
+<div class="flex flex-col gap-1 p-30 bg-[#FDFCF8]">
+    <h1 class="text-3xl font-bold">Mobile legends</h1>
+</div>
+
 </body>
 
 </html>
