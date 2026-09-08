@@ -29,20 +29,19 @@
     <form>
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-      class="lucide lucide-search absolute top-1/2 -translate-y-2 left-38 h-4 w-4"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+      class="lucide lucide-search absolute top-1/2 -translate-y-2 left-39 h-4 w-4"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
       <label for="search" class="sr-only">Search</label>
 
-      <input type="text" class="rounded-full px-4 py-1 border border-[#000]" placeholder="Cari Teman...">
+      <input type="text" class="rounded-full px-6 py-1 border outline-none border-[#000] placeholder:text-black" placeholder="Cari Teman...">
     </form>
 
-    <div class="flex flex-row gap-6 items-center justify-center">
-
+    <div class="flex flex-row gap-4 items-center justify-center">
       <a class="text-[#000] px-4 py-2" href="#">Chat</a>
       <a class="text-[#000] px-4 py-2" href="#gameFavorite">Game Favorite</a>
       <a class="text-[#000] px-4 py-2" href="#">Home</a>
     </div>
 
-    <div class="flex flex-row gap-4 items-center justify-center">
+    <div class="flex flex-row gap-4 items-center justify-center ml-120">
       <a class="text-gray-950 font-bold px-4 py-1 hover:underline transition-colors duration-150" href="register">Sign In</a>
       <a class="text-gray-950 font-bold px-4 py-1 hover:underline transition-colors duration-150" href="login">Login</a>
     </div>
