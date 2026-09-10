@@ -55,7 +55,6 @@
                     </div>
                 </form>
 
-                {{-- Link SSO / Register --}}
                 <p class="text-center text-sm text-gray-700 mt-4">
                     Login with SSO/
                     @if (Route::has('register'))
@@ -65,18 +64,15 @@
 
                 {{-- Social Login --}}
                 <div class="mt-4 space-y-3">
+                        <a href="{{ url('auth/google') }}">
                     <button type="button"
                         class="w-full flex items-center gap-3 border border-gray-300 rounded-full px-4 py-2
                                transition-all duration-150 ease-out
                                hover:bg-gray-100 hover:-translate-y-0.5 active:scale-95 active:translate-y-0">
-                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47a5.54 5.54 0 01-2.4 3.63v3.02h3.86c2.26-2.08 3.56-5.14 3.56-8.89z" />
-                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3.02c-1.07.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.28v3.11A11.997 11.997 0 0012 24z" />
-                            <path fill="#FBBC05" d="M5.27 14.26A7.2 7.2 0 014.9 12c0-.78.14-1.55.37-2.26V6.63H1.28A11.997 11.997 0 000 12c0 1.93.46 3.76 1.28 5.37l3.99-3.11z" />
-                            <path fill="#EA4335" d="M12 4.77c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.94 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.28 6.63l3.99 3.11C6.22 6.88 8.87 4.77 12 4.77z" />
-                        </svg>
+                               <img src="{{ asset('images/Google_picture.png') }}" alt="Google Logo" class=" bg-gray-100 w-8 h-8 rounded-full object-contain"> 
                         <span class="text-sm italic text-gray-700">Continue with Google</span>
                     </button>
+                        </a>
                 </div>
             </div>
 

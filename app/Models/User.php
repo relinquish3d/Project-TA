@@ -35,6 +35,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'id_google',
     ];
 
     public function isAdmin(): bool

@@ -18,3 +18,8 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::middleware('web')->group(function () {
+Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [App\Http\Controllers\GoogleController::class, 'handleGoogleCallback']);
+});
