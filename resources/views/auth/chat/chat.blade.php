@@ -16,7 +16,7 @@
             <!-- Header Sidebar -->
             <div class="p-4 flex items-center space-x-3 border-b border-gray-300">
                 <!-- Tombol Kembali ke Landing Page -->
-                <a href="{{ url('/') }}" class="text-black font-bold hover:opacity-70 transition duration-150">
+                <a href="{{ url('/dashboard') }}" class="text-black font-bold hover:opacity-70 transition duration-150">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
@@ -33,7 +33,7 @@
                     <a href="{{ route('chat.show', $user->id) }}" 
                        class="flex items-center justify-between p-4 border-b border-gray-300 hover:bg-gray-300 transition duration-150 block cursor-pointer {{ isset($activeUser) && $activeUser->id == $user->id ? 'bg-[#C4C4C4]' : '' }}">
                         <div class="flex items-center space-x-3 pointer-events-none">
-                            <img src="{{ $user->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}" 
+                            <img src="{{ asset('storage/' . $user->avatar) }}" 
                                  class="w-12 h-12 rounded-full object-cover">
                             <div>
                                 <h2 class="font-semibold text-gray-900 text-base">{{ $user->name }}</h2>
