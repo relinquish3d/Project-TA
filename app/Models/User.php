@@ -10,20 +10,20 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, Notifiable;
 
     protected $primaryKey = 'id_user';
 
     public function SentInvite()
     {
-        return $this->hasMany(Invite::Class, 'sender_id');
+        return $this->hasMany(Invite::class, 'sender_id', 'id_user');
     }
 
     public function receivedInvite()
     {
-        return $this->hasMany(Invite::Class, 'receiver_id');
+        return $this->hasMany(Invite::class, 'receiver_id', 'id_user');
     }
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -57,5 +57,28 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id', 'id_user');
+    }
+
+    public function last_message()
+    {
+        // DIBAIKI: Menggunakan $this->id_user (bukan $this->id)
+        return $this->hasOne(Message::class, 'sender_id', 'id_user')
+                    ->orWhere('receiver_id', $this->id_user)
+                    ->latestOfMany();
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id', 'id_user');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id', 'id_user');
     }
 }

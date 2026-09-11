@@ -31,7 +31,7 @@
 
     <!-- Navigation Links -->
     <div class="flex items-center gap-8">
-        <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#">Chat</a>
+        <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat.show') }}">Chat</a>
         <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite">Game Favorit</a>
         <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#">Home</a>
     </div>
