@@ -38,7 +38,7 @@
                                 <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
                                     <img class="w-full h-full object-cover" src="{{ asset('images/Game/pubg.png') }}" alt="PUBG Mobile" />  
                                 </div>
-                                <span class="text-base font-extrabold text-slate-900">PUBG</span>
+                                <span class="text-base font-bold text-slate-900">PUBG</span>
                             </div>
                         </label>
 
@@ -49,7 +49,7 @@
                                 <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
                                     <img class="w-full h-full object-cover" src="{{ asset('images/Game/valorant.png') }}" alt="Valorant" />
                                 </div>
-                                <span class="text-base font-extrabold text-slate-900">Valorant</span>
+                                <span class="text-base font-bold text-slate-900">Valorant</span>
                             </div>
                         </label>
 
@@ -60,7 +60,7 @@
                                 <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
                                     <img class="w-full h-full object-cover" src="{{ asset('images/Game/ML.png') }}" alt="Mobile Legends" />
                                 </div>
-                                <span class="text-base font-extrabold text-slate-900 text-center leading-tight">Mobile Legends</span>
+                                <span class="text-base font-bold text-slate-900 text-center leading-tight">Mobile Legends</span>
                             </div>
                         </label>
 
@@ -71,7 +71,7 @@
                                 <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
                                     <img class="w-full h-full object-cover" src="{{ asset('images/Game/FC.png') }}" alt="FC Mobile" />
                                 </div>
-                                <span class="text-base font-extrabold text-slate-900">FC Mobile</span>
+                                <span class="text-base font-bold text-slate-900">FC Mobile</span>
                             </div>
                         </label>
 

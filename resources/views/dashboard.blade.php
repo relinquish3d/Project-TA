@@ -44,7 +44,7 @@
             {{-- Foto Profil User jika sudah login --}}
             <a href="{{ route('profile.edit') }}" class="group relative flex items-center justify-center">
                 @if(Auth::user()->avatar)
-                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}" 
+                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
                          alt="{{ Auth::user()->name }}" 
                          class="w-10 h-10 rounded-full object-cover border-2 border-gray-400 group-hover:border-black transition-all shadow-xs">
                 @else
