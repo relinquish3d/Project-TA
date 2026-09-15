@@ -38,7 +38,7 @@
 
     <!-- Auth Actions -->
     <div class="flex items-center gap-6">
-        <a class="text-black font-bold text-sm hover:underline transition-colors" href="register">Sign In</a>
+        <a class="text-black font-bold text-sm hover:underline transition-colors" href="register">Sign Up</a>
         <a class="text-black font-bold text-sm hover:underline transition-colors" href="login">Login</a>
     </div>
 </nav>

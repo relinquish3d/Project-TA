@@ -56,7 +56,7 @@
             </a>
         @else
             {{-- Tampilan jika belum login --}}
-            <a class="text-black font-bold text-sm hover:underline transition-colors" href="{{ route('register') }}">Sign In</a>
+            <a class="text-black font-bold text-sm hover:underline transition-colors" href="{{ route('register') }}">Sign Up</a>
             <a class="text-black font-bold text-sm hover:underline transition-colors" href="{{ route('login') }}">Login</a>
         @endauth
     </div>

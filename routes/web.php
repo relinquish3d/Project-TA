@@ -1,4 +1,5 @@
 <?php
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ Route::get('/', function () {
     return view('landingPage');
 });
 
+//dashboard user
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -20,14 +22,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
-
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/chat/{id?}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{id}', [ChatController::class, 'send'])->name('chat.send');
 });
+
+
 Route::middleware('web')->group(function () {
 Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [App\Http\Controllers\GoogleController::class, 'handleGoogleCallback']);
@@ -48,7 +50,7 @@ Route::middleware('guest')->group(function () {
     Route::post('register/step-1', [RegisteredUserController::class, 'postStep1'])->name('register.step1');
 
     // Tampilan Step 2 (Create Profile)
-    Route::get('register/profile', [RegisteredUserController::class, 'showCreateProfile'])->name('register.profile');
+    Route::get('register/profile', [RegisteredUserController::class, 'showCreateProfile'])->name('register.profilee');
 
     // Proses Submit Final Step 2 (POST)
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
@@ -68,3 +70,12 @@ Route::middleware('guest')->group(function () {
     Route::get('choose-game', [RegisteredUserController::class, 'showChooseGame'])->name('register.game');
     Route::post('register/complete', [RegisteredUserController::class, 'store'])->name('register.complete');
 });
+
+//dasboard admin    
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::get('/dashboard/admin', function () {
+        return view('dashboard_admin');
+    })->name('admin.dashboard');
+});
+
+require __DIR__.'/auth.php';
