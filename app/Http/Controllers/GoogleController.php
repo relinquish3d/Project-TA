@@ -19,7 +19,7 @@ class GoogleController extends Controller
     {
         try {
             // Gunakan stateless() jika sering kena InvalidStateException / Session mismatch
-            $user = Socialite::driver('google')->stateless()->user();
+            $user = Socialite::driver('google')->stateless()->user();;
 
             $finduser = User::where('id_google', $user->id)->first();
 
@@ -35,12 +35,11 @@ class GoogleController extends Controller
                 ]);
 
                 Auth::login($newUser);
-                return redirect()->intended('dashboard');    
+                return redirect()->intended('dashboard');
             }
-
         } catch (Throwable $e) {
             // Dump objek exception utuh agar detail error/stack trace terlihat jelas
-            dd($e); 
+            dd($e);
         }
     }
 }
