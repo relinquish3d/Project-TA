@@ -2,25 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Invite extends Model
 {
-    protected $table = 'Invite';
+    use HasFactory;
 
-    protected $fillable = [
-        'sender_id',
-        'receiver_id',
-        'status',
-    ];
+    protected $table = 'invite';
 
+    protected $fillable = ['sender_id', 'receiver_id', 'status'];
+
+    // User yang mengirim permintaan add
     public function sender()
     {
-        return $this->belongsTo(User::Class, 'sender_id');
+        return $this->belongsTo(User::class, 'sender_id');
     }
 
+    // User yang menerima permintaan add
     public function receiver()
     {
-        return $this->belongsTo(User::Class, 'receiver_id');
+        return $this->belongsTo(User::class, 'receiver_id');
     }
 }
+

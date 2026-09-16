@@ -40,7 +40,7 @@
             <a href="{{ route('profile.edit') }}" class="group relative flex items-center justify-center">
                 @if(Auth::user()->avatar)
                     <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
-                         alt="{{ Auth::user()->name }}" 
+                         alt="{{ Auth::user()->name }}"
                          class="w-10 h-10 rounded-full object-cover border-2 border-gray-400 group-hover:border-black transition-all shadow-xs">
                 @else
                     {{-- Avatar Default jika user belum upload foto --}}
@@ -56,7 +56,7 @@
         @endauth
     </div>
   </nav>
-  
+
     <h1>HALO ADMIN SELAMAT DATANG!!!!!</h1>
                         <p class="mt-2">
                         Halo, {{ auth()->user()->name }}

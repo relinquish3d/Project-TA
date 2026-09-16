@@ -40,7 +40,7 @@ class GoogleController extends Controller
 
         } catch (Throwable $e) {
             // Dump objek exception utuh agar detail error/stack trace terlihat jelas
-            dd($e); 
+            dd($e);
         }
     }
 }
