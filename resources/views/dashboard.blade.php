@@ -23,17 +23,25 @@
                 PlayAll
             </span>
         </div>
+<!-- Search Bar (Pastikan id searchDropdown ada di sini) -->
+<div class="relative flex items-center">
+    <span class="absolute left-3.5 text-gray-500 flex items-center pointer-events-none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
+            <path d="m21 21-4.34-4.34" />
+            <circle cx="11" cy="11" r="8" />
+        </svg>
+    </span>
+    <input type="text"
+           id="searchInput"
+           class="w-64 rounded-full pl-10 pr-4 py-1.5 text-sm bg-transparent border border-gray-400 text-black placeholder-gray-500 focus:outline-none focus:border-black"
+           placeholder="Cari teman..."
+           autocomplete="off">
 
-        <!-- Search Bar -->
-        <div class="relative flex items-center">
-            <span class="absolute left-3.5 text-gray-500 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
-                    <path d="m21 21-4.34-4.34" />
-                    <circle cx="11" cy="11" r="8" />
-                </svg>
-            </span>
-            <input type="text" id="searchInput" class="w-64 rounded-full pl-10 pr-4 py-1.5 text-sm bg-transparent border border-gray-400 text-black placeholder-gray-500 focus:outline-none focus:border-black" placeholder="Cari teman...">
-        </div>
+    <!-- Kotak Dropdown Hasil Pencarian -->
+    <div id="searchDropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto">
+        <!-- Hasil AJAX akan muncul di sini -->
+    </div>
+</div>
 
         <!-- Navigation Links -->
         <div class="flex items-center gap-8">
@@ -406,6 +414,67 @@
             </div>
         </div>
     </footer>
+</body>
+
+ <script>
+    lucide.createIcons();
+
+    const searchInput = document.getElementById('searchInput');
+    const searchDropdown = document.getElementById('searchDropdown');
+    let searchTimeout;
+
+    if (searchInput && searchDropdown) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+
+            if (query.length === 0) {
+                searchDropdown.classList.add('hidden');
+                searchDropdown.innerHTML = '';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                const url = `{{ route('users.search') }}?q=${encodeURIComponent(query)}`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchDropdown.innerHTML = '';
+
+                        if (data.length === 0) {
+                            searchDropdown.innerHTML = `<div class="p-4 text-center text-sm text-gray-500 italic">User tidak ditemukan</div>`;
+                        } else {
+                            data.forEach(user => {
+                                const item = `
+                                    <a href="${user.url}" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition border-b border-gray-100 last:border-none">
+                                        <img src="${user.avatar}" alt="${user.name}" class="w-9 h-9 rounded-full object-cover border border-gray-300 flex-shrink-0">
+                                        <div class="overflow-hidden">
+                                            <h4 class="text-sm font-bold text-gray-900 truncate">${user.name}</h4>
+                                            <!-- Diubah dari Skill menjadi ID User -->
+                                            <p class="text-xs text-gray-500">ID: <span class="text-gray-700">${user.id}</span></p>
+                                        </div>
+                                    </a>
+                                `;
+                                searchDropdown.innerHTML += item;
+                            });
+                        }
+                        searchDropdown.classList.remove('hidden');
+                    })
+                    .catch(err => console.error('Error searching users:', err));
+            }, 300);
+        });
+
+        // Tutup dropdown jika mengklik di luar area input pencarian
+        window.addEventListener('click', function(e) {
+            if (searchInput && searchDropdown) {
+                if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.classList.add('hidden');
+                }
+            }
+        });
+    }
+</script>
 </body>
 
 </html>

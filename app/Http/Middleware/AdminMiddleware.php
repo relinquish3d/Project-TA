@@ -22,7 +22,7 @@ class AdminMiddleware
         if (auth()->user()->role !== 'admin') {
             abort(403, 'Anda tidak memiliki akses ke halaman admin.');
         }
-        
+
         return $next($request);
     }
 }

@@ -133,3 +133,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
+
+use App\Http\Controllers\ReportController;
+
+// Pastikan berada di dalam middleware auth jika laporan memerlukan login
+Route::middleware(['auth'])->group(function () {
+    Route::post('/report', [ReportController::class, 'store'])->name('report.store');
+});
+
+
+Route::post('/report', function (Request $request) {
+    // Logika sementara
+    return redirect()->back()->with('success', 'Laporan berhasil dikirim!');
+})->name('report.store');
+
+// Route untuk fitur live search user
+Route::get('/search-users', [UserController::class, 'search'])->name('users.search');
