@@ -36,8 +36,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/chat/{id}', [ChatController::class, 'send'])->name('chat.send');
 });
 Route::middleware('web')->group(function () {
-Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
-Route::get('auth/google/callback', [App\Http\Controllers\GoogleController::class, 'handleGoogleCallback']);
+    Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
+    Route::get('auth/google/callback', [App\Http\Controllers\GoogleController::class, 'handleGoogleCallback']);
 });
 
 
@@ -61,10 +61,12 @@ Route::middleware('guest')->group(function () {
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
 });
 
-Route::middleware('guest')->group(function () {
+    Route::middleware('guest')->group(function () {
     // Step 1: Register Account
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-    Route::get('register/step-1', function() { return redirect()->route('register'); });
+    Route::get('register/step-1', function () {
+        return redirect()->route('register');
+    });
     Route::post('register/step-1', [RegisteredUserController::class, 'postStep1'])->name('register.step1');
 
     // Step 2: Create Profile
@@ -110,6 +112,7 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
+
 Route::get('/api/search-users', function (Request $request) {
     $query = $request->get('q');
     if (!$query) return response()->json([]);
@@ -125,3 +128,8 @@ Route::get('/api/search-users', function (Request $request) {
 
     return response()->json($users);
 })->name('users.search');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});

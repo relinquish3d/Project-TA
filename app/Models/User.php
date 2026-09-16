@@ -30,27 +30,20 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-   protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',
-    'display_name',
-    'bio',
-    'avatar',
-    'favorite_games',
-];
+    protected $fillable = [
+        'name',
+        'display_name',
+        'email',
+        'password',
+        'bio',
+        'avatar',
+        'role',
+        'favorite_games',
+        'active_status',
+        'dark_mode',
+        'messenger_color',
+    ];
 
-protected $casts = [
-    'email_verified_at' => 'datetime',
-    'password' => 'hashed',
-    'favorite_games' => 'array',
-];
-
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -71,9 +64,27 @@ protected $casts = [
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'favorite_games' => 'array',
         ];
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /* --- RELASI INVITE --- */
+    public function sentInvite()
+    {
+        return $this->hasMany(Invite::class, 'sender_id', 'id');
+    }
+
+    public function receivedInvite()
+    {
+        return $this->hasMany(Invite::class, 'receiver_id', 'id');
+    }
+
+    /* --- RELASI CHAT / MESSAGE --- */
     public function messages()
     {
         return $this->hasMany(Message::class, 'sender_id', 'id_user');
