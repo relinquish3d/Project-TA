@@ -21,18 +21,15 @@
             </span>
         </div>
 
+        <!-- Search Bar -->
         <div class="relative flex items-center">
             <span class="absolute left-3.5 text-gray-500 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
                     <path d="m21 21-4.34-4.34" />
                     <circle cx="11" cy="11" r="8" />
                 </svg>
             </span>
-
-            <input type="text" id="search-input" autocomplete="off" class="w-72 rounded-full pl-10 pr-4 py-1.5 text-sm bg-white border border-gray-300 text-black placeholder-gray-400 focus:outline-none focus:border-black shadow-sm" placeholder="Cari teman mabar...">
-
-            <!-- Dropdown Hasil ala Lita -->
-            <div id="search-results" class="hidden absolute top-11 left-0 w-80 bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden z-50"></div>
+            <input type="text" id="searchInput" class="w-64 rounded-full pl-10 pr-4 py-1.5 text-sm bg-transparent border border-gray-400 text-black placeholder-gray-500 focus:outline-none focus:border-black" placeholder="Cari teman...">
         </div>
 
         <!-- Navigation Links -->

@@ -1,21 +1,36 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User; // Import model User di sini
+use App\Models\User;
 
 class UserController extends Controller
 {
     public function search(Request $request)
     {
-        $query = $request->get('query');
-        
-        $users = User::where('name', 'LIKE', "%{$query}%")
-                    ->orWhere('display_name', 'LIKE', "%{$query}%")
-                    ->limit(5)
-                    ->get(['id', 'name', 'display_name', 'avatar']);
+        $query = $request->input('q');
 
-        return response()->json($users);
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $users = User::where('id', '!=', auth()->id())
+                     ->where(function($q) use ($query) {
+                         $q->where('name', 'LIKE', "%{$query}%")
+                           ->orWhere('display_name', 'LIKE', "%{$query}%");
+                     })
+                     ->limit(6)
+                     ->get();
+
+        $result = $users->map(function($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->display_name ?? $user->name,
+                'avatar' => $user->avatar ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png'),
+                'url' => route('profile.edit', $user->id)
+            ];
+        });
+
+        return response()->json($result);
     }
 }

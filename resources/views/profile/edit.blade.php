@@ -32,6 +32,7 @@
                  class="hidden absolute right-0 mt-2 w-44 bg-white border border-gray-300 rounded-2xl shadow-lg z-50 overflow-hidden transform opacity-0 scale-95 transition-all duration-150 ease-out origin-top-right">
                 
                 <div class="py-1">
+                  <div class="py-1">
                     <!-- Opsi Report -->
                     <button type="button" 
                             onclick="openReportModal()" 
@@ -55,6 +56,74 @@
             </div>
         </div>
     </header>
+
+    <!-- REPORT -->
+    <div id="reportModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-lg mx-4 rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="reportModalContent">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 bg-[#D9D9D9] border-gray-100">
+                <div class="flex items-center gap-2">
+                    <h3 class="text-lg font-bold text-gray-800">Report Akun</h3>
+                </div>
+                <button onclick="closeReportModal()" class="p-2 text-gray-black hover:text-gray-600 rounded-full hover:bg-gray-100 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Modal Form -->
+            <form action="{{ route('report.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+                @csrf
+                
+                <!-- Kategori Masalah -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Kategori Masalah</label>
+                    <select name="category" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-amber-[#D9D9D9] focus:outline-none text-sm text-gray-700">
+                        <option value="" disabled selected>-- Pilih alasan laporan --</option>
+                        <option value="fake_profile">Profil Palsu / Penipuan</option>
+                        <option value="harassment">Pelecehan / Kata-kata Kasar</option>
+                        <option value="inappropriate_content">Konten Tidak Pantas</option>
+                        <option value="spam">Spam / Aktivitas Mencurigakan</option>
+                        <option value="other">Lainnya</option>
+                    </select>
+                </div>
+
+                <!-- Deskripsi Detail -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi Detail</label>
+                    <textarea name="description" rows="4" required placeholder="Jelaskan kronologi atau detail masalah yang Anda temui..." class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-amber-[#D9D9D9] focus:outline-none text-sm text-gray-700 resize-none"></textarea>
+                </div>
+
+                <!-- Unggah Bukti / Screenshot -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Unggah Bukti (Opsional)</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <i data-lucide="upload-cloud" class="w-8 h-8 text-gray-400 mb-2"></i>
+                                <p class="text-xs text-gray-500"><span class="font-semibold">Klik untuk unggah</span> atau seret file ke sini</p>
+                                <p class="text-[10px] text-gray-400 mt-1">PNG, JPG, atau JPEG (Maks. 2MB)</p>
+                            </div>
+                            <input type="file" name="attachment" class="hidden" accept="image/png, image/jpeg" onchange="previewFileName(this)">
+                        </label>
+                    </div>
+                    <span id="fileName" class="text-xs text-gray-500 mt-1 block italic"></span>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 text-sm font-semibold text-black bg-[#F3F0E9] hover:bg-[#D9D9D9] rounded-xl shadow-md transition flex items-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        Kirim Laporan
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
 
     <!-- Main Container -->
     <div class="max-w-6xl mx-auto px-6 py-8">
@@ -226,17 +295,20 @@
                 reader.readAsDataURL(event.target.files[0]);
             }
         }
+// Inisialisasi ikon Lucide
+        lucide.createIcons();
 
-        // Toggle Popup Dropdown Menu
+        // Fungsi Toggle Dropdown Titik Tiga
         function toggleMenu(event) {
             event.stopPropagation();
-            const menu = document.getElementById('dropdownMenu');
-            
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
+            const dropdown = document.getElementById('dropdownMenu');
+            const isHidden = dropdown.classList.contains('hidden');
+
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
                 setTimeout(() => {
-                    menu.classList.remove('opacity-0', 'scale-95');
-                    menu.classList.add('opacity-100', 'scale-100');
+                    dropdown.classList.remove('opacity-0', 'scale-95');
+                    dropdown.classList.add('opacity-100', 'scale-100');
                 }, 10);
             } else {
                 closeMenu();
@@ -244,40 +316,55 @@
         }
 
         function closeMenu() {
-            const menu = document.getElementById('dropdownMenu');
-            if (menu && !menu.classList.contains('hidden')) {
-                menu.classList.remove('opacity-100', 'scale-100');
-                menu.classList.add('opacity-0', 'scale-95');
-                setTimeout(() => {
-                    menu.classList.add('hidden');
-                }, 150);
-            }
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.remove('opacity-100', 'scale-100');
+            dropdown.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                dropdown.classList.add('hidden');
+            }, 150);
         }
 
-        // Close dropdown when clicking outside
-        window.addEventListener('click', function(event) {
-            const menu = document.getElementById('dropdownMenu');
-            const button = document.getElementById('menuButton');
-            
-            if (menu && button && !menu.contains(event.target) && !button.contains(event.target)) {
-                closeMenu();
-            }
-        });
-
-        // Modal Report functions
+        // Fungsi Buka Modal Report
         function openReportModal() {
             closeMenu();
-            document.getElementById('reportModal').classList.remove('hidden');
+            const modal = document.getElementById('reportModal');
+            const content = document.getElementById('reportModalContent');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
         }
 
+        // Fungsi Tutup Modal Report
         function closeReportModal() {
-            document.getElementById('reportModal').classList.add('hidden');
+            const modal = document.getElementById('reportModal');
+            const content = document.getElementById('reportModalContent');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
 
-        function submitReport() {
-            alert('Laporan Anda telah terkirim!');
-            closeReportModal();
+        // Menampilkan nama file yang diunggah
+        function previewFileName(input) {
+            const fileNameSpan = document.getElementById('fileName');
+            if (input.files && input.files[0]) {
+                fileNameSpan.textContent = `File terpilih: ${input.files[0].name}`;
+            } else {
+                fileNameSpan.textContent = '';
+            }
         }
+
+        // Tutup dropdown jika klik di luar area
+        window.addEventListener('click', function() {
+            closeMenu();
+        });
     </script>
 </body>
 </html>
