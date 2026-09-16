@@ -3,7 +3,6 @@
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryGameController;
 use App\Http\Controllers\FriendController;
@@ -30,12 +29,6 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::get('/chat/{id?}', [ChatController::class, 'show'])->name('chat.show');
-    Route::post('/chat/{id}', [ChatController::class, 'send'])->name('chat.send');
-});
 Route::middleware('web')->group(function () {
     Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
     Route::get('auth/google/callback', [App\Http\Controllers\GoogleController::class, 'handleGoogleCallback']);
@@ -62,7 +55,7 @@ Route::middleware('guest')->group(function () {
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
 });
 
-    Route::middleware('guest')->group(function () {
+Route::middleware('guest')->group(function () {
     // Step 1: Register Account
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::get('register/step-1', function () {
@@ -101,8 +94,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/categories/{id}', [CategoryGameController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{id}', [CategoryGameController::class, 'destroy'])->name('admin.categories.destroy');
     });
-
 });
+
 
 Route::get('/api/search-users', function (Request $request) {
     $query = $request->get('q');
@@ -111,11 +104,16 @@ Route::get('/api/search-users', function (Request $request) {
     $userId = Auth::id(); // Ambil ID user yang lagi login
 
     $users = User::where('name', 'LIKE', '%' . $query . '%')
-                ->when($userId, function($q) use ($userId) {
-                    return $q->where('id', '!=', $userId);
-                })
-                ->limit(5)
-                ->get(['id', 'name']);
+        ->when($userId, function ($q) use ($userId) {
+            return $q->where('id', '!=', $userId);
+        })
+        ->limit(5)
+        ->get(['id', 'name']);
 
     return response()->json($users);
 })->name('users.search');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('report', function (Blueprint $table) {
             $table->id('id_report');
-            $table->foreignId('reporter_id')->constrained('users', 'id_user');
-            $table->foreignId('reported_id')->constrained('users', 'id_user');
+            $table->foreignId('reporter_id')->constrained('users', 'id');
+            $table->foreignId('reported_id')->constrained('users', 'id');
             $table->string('category')->nullable();
             $table->string('deskripsi');
             $table->string('bukti_gambar')->nullable();

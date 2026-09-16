@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PlayAll - Temukan Teman Mabar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body class="bg-[#FDFCF8]">
@@ -36,7 +37,7 @@
 
         <!-- Navigation Links -->
         <div class="flex items-center gap-8">
-            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat.show') }}">Chat</a>
+            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat') }}">Chat</a>
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite">Game Favorit</a>
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ url('/') }}">Home</a>
         </div>
@@ -91,7 +92,7 @@
             <p>untuk setiap platform favoritmu.</p>
         </div>
 
-        <!-- Container Pembungkus Card (Berjejer 4 Game di Tengah dengan Efek Hover) -->
+        <!-- Container Pembungkus Card -->
         <div class="max-w-8xl mx-auto flex flex-wrap justify-center gap-10 p-20 bg-[#FDFCF8]">
 
             <!-- Card 1: Mobile Legends -->
@@ -169,7 +170,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Songmin</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -178,7 +182,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Michh</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -187,7 +194,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Lizz</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -196,7 +206,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Asa</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -211,7 +224,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Songmin</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -219,7 +235,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Michh</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -227,7 +246,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Lizz</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -235,7 +257,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Asa</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -250,7 +275,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Songmin</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -258,7 +286,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Michh</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -266,7 +297,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Lizz</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -274,7 +308,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Asa</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -289,7 +326,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Songmin</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -297,7 +337,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Michh</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -305,7 +348,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Lizz</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -313,7 +359,10 @@
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" /></a>
                 <div class="p-4 text-left">
-                    <div class="flex text-[#fbbf24] text-lg gap-0.5 mb-1"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="flex items-center gap-1.5 font-bold text-black text-sm mb-1">
+                        <i data-lucide="star" class="w-5 h-5 fill-[#FFC107] text-[#FFC107]"></i>
+                        <span>5.00</span>
+                    </div>
                     <h5 class="text-base font-bold tracking-tight text-black mb-3 player-name">Asa</h5>
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
@@ -336,7 +385,7 @@
                 <div>
                     <h3 class="font-bold text-lg mb-4 text-black">Navigation</h3>
                     <ul class="space-y-3 text-sm text-gray-800">
-                        <li><a href="{{ route('chat.show') }}" class="hover:text-black transition-colors">Chat</a></li>
+                        <li><a href="{{ route('chat') }}" class="hover:text-black transition-colors">Chat</a></li>
                         <li><a href="#gameFavorite" class="hover:text-black transition-colors">Game Favorite</a></li>
                         <li><a href="{{ url('/') }}" class="hover:text-black transition-colors">Home</a></li>
                     </ul>
@@ -357,32 +406,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Script Filter Pencarian Player -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const filter = this.value.toLowerCase().trim();
-                    const cards = document.querySelectorAll('.player-card');
-
-                    cards.forEach(card => {
-                        const nameElement = card.querySelector('.player-name');
-                        if (nameElement) {
-                            const nameText = nameElement.textContent || nameElement.innerText;
-                            if (nameText.toLowerCase().includes(filter)) {
-                                card.classList.remove('hidden');
-                            } else {
-                                card.classList.add('hidden');
-                            }
-                        }
-                    });
-                });
-            }
-        });
-    </script>
 </body>
 
 </html>

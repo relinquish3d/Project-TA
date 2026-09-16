@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('rating', function (Blueprint $table) {
             $table->id('id_rating');
-            $table->foreignId('reviewer_id')->constrained('users', 'id_user')->onDelete('cascade');
-            $table->foreignId('target_id')->constrained('users', 'id_user')->onDelete('cascade');
-            $table->float('stars', 2)->constrained('users', 'rating_avg')->onDelete('cascade');
+            $table->foreignId('reviewer_id')->constrained('users', 'id')->onDelete('cascade');
+            $table->foreignId('target_id')->constrained('users', 'id')->onDelete('cascade');
+            $table->float('stars', 2);
             $table->text('comment')->nullable();
             $table->timestamps();
         });

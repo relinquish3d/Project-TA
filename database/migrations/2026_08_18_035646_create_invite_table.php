@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('invite', function (Blueprint $table) {
             $table->id('id_invite');
-            $table->foreignId('sender_id')->constrained('users', 'id_user');
-            $table->foreignId('receiver_id')->constrained('users', 'id_user');
+            $table->foreignId('sender_id')->constrained('users', 'id');
+            $table->foreignId('receiver_id')->constrained('users', 'id');
             $table->string('status')->default('pending');
             $table->timestamps();
         });

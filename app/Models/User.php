@@ -13,17 +13,10 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $primaryKey = 'id_user';
+    protected $primaryKey = 'id';
+    
 
-    public function SentInvite()
-    {
-        return $this->hasMany(Invite::class, 'sender_id', 'id_user');
-    }
-
-    public function receivedInvite()
-    {
-        return $this->hasMany(Invite::class, 'receiver_id', 'id_user');
-    }
+    
 
     /**
      * The attributes that are mass assignable.
@@ -32,24 +25,17 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'display_name',
         'email',
         'password',
-        'display_name',
         'bio',
         'avatar',
+        'role',
         'favorite_games',
+        'active_status',
+        'dark_mode',
+        'messenger_color',
     ];
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'favorite_games' => 'array',
-    ];
-
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -71,29 +57,46 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'favorite_games' => 'array',
         ];
     }
 
-    public function messages()
+    public function isAdmin(): bool
     {
-        return $this->hasMany(Message::class, 'sender_id', 'id_user');
+        return $this->role === 'admin';
     }
 
-    public function last_message()
+    /* --- RELASI INVITE --- */
+    public function sentInvite()
     {
-        // DIBAIKI: Menggunakan $this->id_user (bukan $this->id)
-        return $this->hasOne(Message::class, 'sender_id', 'id_user')
-                    ->orWhere('receiver_id', $this->id_user)
-                    ->latestOfMany();
+        return $this->hasMany(Invite::class, 'sender_id', 'id');
+    }
+
+    public function receivedInvite()
+    {
+        return $this->hasMany(Invite::class, 'receiver_id', 'id');
+    }
+
+    /* --- RELASI CHAT / MESSAGE --- */
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id', 'id');
     }
 
     public function sentMessages()
     {
-        return $this->hasMany(Message::class, 'sender_id', 'id_user');
+        return $this->hasMany(Message::class, 'sender_id', 'id');
     }
 
     public function receivedMessages()
     {
-        return $this->hasMany(Message::class, 'receiver_id', 'id_user');
+        return $this->hasMany(Message::class, 'receiver_id', 'id');
+    }
+
+    public function last_message()
+    {
+        return $this->hasOne(Message::class, 'sender_id', 'id')
+            ->orWhere('receiver_id', $this->id)
+            ->latestOfMany();
     }
 }
