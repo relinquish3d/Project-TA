@@ -37,7 +37,7 @@
 
         <!-- Navigation Links -->
         <div class="flex items-center gap-8">
-            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat') }}">Chat</a>
+            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat.index') }}">Chat</a>
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite">Game Favorit</a>
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ url('/') }}">Home</a>
         </div>
@@ -385,7 +385,7 @@
                 <div>
                     <h3 class="font-bold text-lg mb-4 text-black">Navigation</h3>
                     <ul class="space-y-3 text-sm text-gray-800">
-                        <li><a href="{{ route('chat') }}" class="hover:text-black transition-colors">Chat</a></li>
+                        <li><a href="{{ route('chat.index') }}" class="hover:text-black transition-colors">Chat</a></li>
                         <li><a href="#gameFavorite" class="hover:text-black transition-colors">Game Favorite</a></li>
                         <li><a href="{{ url('/') }}" class="hover:text-black transition-colors">Home</a></li>
                     </ul>

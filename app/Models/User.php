@@ -15,15 +15,6 @@ class User extends Authenticatable
 
     protected $primaryKey = 'id_user';
 
-    public function SentInvite()
-    {
-        return $this->hasMany(Invite::class, 'sender_id', 'id_user');
-    }
-
-    public function receivedInvite()
-    {
-        return $this->hasMany(Invite::class, 'receiver_id', 'id_user');
-    }
 
     /**
      * The attributes that are mass assignable.
