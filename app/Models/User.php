@@ -13,10 +13,8 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $primaryKey = 'id';
-    
+    protected $primaryKey = 'id_user';
 
-    
 
     /**
      * The attributes that are mass assignable.
@@ -80,23 +78,24 @@ class User extends Authenticatable
     /* --- RELASI CHAT / MESSAGE --- */
     public function messages()
     {
-        return $this->hasMany(Message::class, 'sender_id', 'id');
-    }
-
-    public function sentMessages()
-    {
-        return $this->hasMany(Message::class, 'sender_id', 'id');
-    }
-
-    public function receivedMessages()
-    {
-        return $this->hasMany(Message::class, 'receiver_id', 'id');
+        return $this->hasMany(Message::class, 'sender_id', 'id_user');
     }
 
     public function last_message()
     {
-        return $this->hasOne(Message::class, 'sender_id', 'id')
-            ->orWhere('receiver_id', $this->id)
-            ->latestOfMany();
+        // DIBAIKI: Menggunakan $this->id_user (bukan $this->id)
+        return $this->hasOne(Message::class, 'sender_id', 'id_user')
+                    ->orWhere('receiver_id', $this->id_user)
+                    ->latestOfMany();
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id', 'id_user');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id', 'id_user');
     }
 }

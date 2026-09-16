@@ -32,12 +32,12 @@
             <input type="text" id="searchInput" class="w-64 rounded-full pl-10 pr-4 py-1.5 text-sm bg-transparent border border-gray-400 text-black placeholder-gray-500 focus:outline-none focus:border-black" placeholder="Cari teman...">
         </div>
 
-        <!-- Navigation Links -->
-        <div class="flex items-center gap-8">
-            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat') }}">Chat</a>
-            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite">Game Favorit</a>
-            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#">Home</a>
-        </div>
+    <!-- Navigation Links -->
+    <div class="flex items-center gap-8">
+        <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat.show') }}">Chat</a>
+        <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite">Game Favorit</a>
+        <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#">Home</a>
+    </div>
 
         <!-- Auth Actions -->
         <div class="flex items-center gap-6">
