@@ -18,7 +18,7 @@
             <h1 class="text-xl font-bold italic text-black">Your profile</h1>
         </div>
 
-        <!-- Pop-up Titik Tiga (Dipaksa Presisi Pojok Kanan Atas Header) -->
+        <!-- Pop-up Titik Tiga ) -->
         <div class="absolute right-6 top-3.5 z-40">
             <button id="menuButton" 
                     onclick="toggleMenu(event)" 
@@ -33,7 +33,7 @@
                 
                 <div class="py-1">
                   <div class="py-1">
-                    <!-- Opsi Report -->
+                    <!-- Report -->
                     <button type="button" 
                             onclick="openReportModal()" 
                             class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition">
@@ -43,7 +43,7 @@
 
                     <div class="border-t border-gray-200 my-1"></div>
 
-                    <!-- Opsi Logout -->
+                    <!-- Logout -->
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
                         @csrf
                         <button type="submit" 
@@ -94,7 +94,7 @@
                     <textarea name="description" rows="4" required placeholder="Jelaskan kronologi atau detail masalah yang Anda temui..." class="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-amber-[#D9D9D9] focus:outline-none text-sm text-gray-700 resize-none"></textarea>
                 </div>
 
-                <!-- Unggah Bukti / Screenshot -->
+                <!-- Screenshot -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Unggah Bukti (Opsional)</label>
                     <div class="flex items-center justify-center w-full">
@@ -150,10 +150,9 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 
-                <!-- Left Column: Edit Form -->
                 <div class="lg:col-span-6 space-y-6">
                     
-                    <!-- Avatar Upload Section (Klik pada Foto) -->
+                    <!-- Upload foto profile-->
                     <div class="flex items-center gap-6">
                         <label for="avatar" class="relative w-28 h-28 flex-shrink-0 cursor-pointer group rounded-full overflow-hidden">
                             <img id="avatarPreview" 
@@ -161,7 +160,7 @@
                                  alt="Profile Picture" 
                                  class="w-28 h-28 rounded-full object-cover border-2 border-gray-300 shadow-sm group-hover:opacity-75 transition">
                             
-                            <!-- Overlay Ikon Kamera Saat Hover -->
+                            <!-- Ikon Kamera -->
                             <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
                                 <i data-lucide="camera" class="w-8 h-8 text-white"></i>
                             </div>
@@ -172,7 +171,7 @@
                             <p class="text-xs text-gray-500 mt-0.5">Klik pada foto untuk mengganti</p>
                             <p class="text-[11px] text-gray-400">JPG/PNG, Max 2MB</p>
 
-                            <!-- Hidden File Input -->
+                            <!-- File Input -->
                             <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/png,image/jpg" class="hidden" onchange="previewImage(event)">
                             
                             @error('avatar')
@@ -181,14 +180,14 @@
                         </div>
                     </div>
 
-                    <!-- Full Name Field (Readonly) -->
+                    <!-- Full Name -->
                     <div>
                         <label class="block text-sm font-bold italic text-black mb-1">Full Name</label>
                         <input type="text" value="{{ $user->name }}" readonly
                             class="w-full bg-gray-300 border border-gray-400 rounded-full px-5 py-2.5 text-gray-600 cursor-not-allowed shadow-inner select-none">
                     </div>
 
-                    <!-- Display Name Field -->
+                    <!-- display name  -->
                     <div>
                         <label class="block text-sm font-bold italic text-black mb-1">Display Name</label>
                         <input type="text" name="display_name" value="{{ old('display_name', $user->display_name) }}"
@@ -199,14 +198,14 @@
                         @enderror
                     </div>
 
-                    <!-- Email Field (Readonly) -->
+                    <!-- Email -->
                     <div>
                         <label class="block text-sm font-bold italic text-black mb-1">Email</label>
                         <input type="email" value="{{ $user->email }}" readonly
                             class="w-full bg-gray-300 border border-gray-400 rounded-full px-5 py-2.5 text-gray-600 cursor-not-allowed shadow-inner select-none">
                     </div>
 
-                    <!-- Bio Field -->
+                    <!-- bio -->
                     <div>
                         <label class="block text-sm font-bold italic text-black mb-1">Bio</label>
                         <textarea name="bio" rows="3" placeholder="Tuliskan bio singkat..."
@@ -216,7 +215,7 @@
                         @enderror
                     </div>
 
-                    <!-- Save Button -->
+                    <!-- save -->
                     <div class="pt-2 flex justify-center">
                         <button type="submit" class="bg-[#D9D9D9] border border-black text-black font-bold italic px-10 py-2 rounded-full hover:bg-black hover:text-white transition-all shadow-md">
                             Save
@@ -225,7 +224,7 @@
 
                 </div>
 
-                <!-- Right Column: Game Favorite & Ulasan -->
+                <!-- game favorite dan ulasan -->
                 <div class="lg:col-span-6 space-y-8">
                     
                     <!-- Game Favorit -->
@@ -245,7 +244,7 @@
                         </div>
                     </div>
 
-                    <!-- Ulasan User Card -->
+                    <!-- Ulasan User -->
                     <div class="bg-[#D9D9D9] border border-black rounded-3xl p-6 shadow-sm">
                         <div class="flex items-center gap-2 mb-6 border-b border-gray-400 pb-3">
                             <i data-lucide="star" class="w-7 h-7 fill-[#FFC107] text-[#FFC107]"></i>
@@ -288,11 +287,11 @@
         </div>
     </div>
 
-    <!-- Script Kontrol Popup & Preview Image -->
+    <!-- popup dan foto -->
     <script>
         lucide.createIcons();
 
-        // Preview foto profil
+        // foto profil
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function() {
@@ -303,10 +302,10 @@
                 reader.readAsDataURL(event.target.files[0]);
             }
         }
-// Inisialisasi ikon Lucide
+// ikon Lucide
         lucide.createIcons();
 
-        // Fungsi Toggle Dropdown Titik Tiga
+        // Titik Tiga
         function toggleMenu(event) {
             event.stopPropagation();
             const dropdown = document.getElementById('dropdownMenu');
@@ -332,7 +331,7 @@
             }, 150);
         }
 
-        // Fungsi Buka Modal Report
+        // Report
         function openReportModal() {
             closeMenu();
             const modal = document.getElementById('reportModal');
