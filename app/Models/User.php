@@ -98,4 +98,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class, 'receiver_id', 'id_user');
     }
+
+    /* --- RELASI REPORT --- */
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'user_id', 'id');
+    }
 }

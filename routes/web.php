@@ -142,10 +142,16 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::post('/report', function (Request $request) {
-    // Logika sementara
-    return redirect()->back()->with('success', 'Laporan berhasil dikirim!');
-})->name('report.store');
+// Route::post('/report', function (Request $request) {
+//     // Logika sementara
+//     return redirect()->back()->with('success', 'Laporan berhasil dikirim!');
+// })->name('report.store');
 
 // Route untuk fitur live search user
 Route::get('/search-users', [UserController::class, 'search'])->name('users.search');
+
+
+// Pastikan di dalam middleware auth jika hanya bisa diakses akun login
+Route::middleware(['auth'])->group(function () {
+    Route::post('/report/store', [ReportController::class, 'store'])->name('report.store');
+});
