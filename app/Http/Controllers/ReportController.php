@@ -33,8 +33,7 @@ class ReportController extends Controller
                 'attachment' => $attachmentPath,
             ]);
 
-            // 4. Redirect kembali dengan pesan sukses
-            return redirect()->back()->with('success', 'Laporan Anda berhasil dikirim dan akan segera ditinjau.');
+          return redirect()->back()->with('success_report', 'Laporan berhasil dikirim!');
 
         } catch (\Exception $e) {
             // JIKA MASIH GAGAL, HALAMAN INI AKAN MEMUNCULKAN PESAN ERROR ASLINYA
