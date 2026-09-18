@@ -13,7 +13,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $primaryKey = 'id_user';
+    protected $primaryKey = 'id';
 
 
     /**
