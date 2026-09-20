@@ -14,7 +14,7 @@
 
     {{-- Navbar --}}
     <nav class="w-full fixed top-0 z-50 flex flex-row h-16 px-6 bg-[#D9D9D9] border-b border-gray-300 items-center justify-between shadow-xs">
-        <!-- Logo & Brand -->
+        <!-- Logo -->
         <div class="flex items-center gap-3">
             <a href="{{ url('/') }}" class="flex items-center gap-2">
                 <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-9 h-9 object-contain">
@@ -23,7 +23,7 @@
                 PlayAll
             </span>
         </div>
-<!-- Search Bar (Pastikan id searchDropdown ada di sini) -->
+<!-- Search Bar  -->
 <div class="relative flex items-center">
     <span class="absolute left-3.5 text-gray-500 flex items-center pointer-events-none">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
@@ -50,10 +50,10 @@
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ url('/') }}">Home</a>
         </div>
 
-        <!-- Auth Actions / Profile Photo -->
+        <!-- Profile Photo -->
         <div class="flex items-center gap-6">
             @auth
-            {{-- Foto Profil User jika sudah login --}}
+            {{-- Profil User jika sudah login --}}
             <a href="{{ route('profile.edit') }}" class="group relative flex items-center justify-center">
                 @if(Auth::user()->avatar)
                 <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
@@ -74,7 +74,6 @@
         </div>
     </nav>
 
-    {{-- Hero Section --}}
     <div class="flex flex-row items-center justify-center flex-col gap-100 mt-55 mb-60 p-8 h-fill bg-[#FDFCF8]">
         <div class=" order-1 flex flex-col w-100">
             <h1 class=" text-5xl w-100 font-bold text-4xl">Temukan Teman Mabar Mu Di Sini</h1>
@@ -90,7 +89,7 @@
         </div>
     </div>
 
-    {{-- Game Favorite Section --}}
+    {{-- Game Favorite --}}
     <section id="gameFavorite" class="pt-20">
         <!-- Bagian Judul -->
         <div class="flex flex-col items-center justify-center gap-1 p-8 bg-[#FDFCF8]">
@@ -100,7 +99,7 @@
             <p>untuk setiap platform favoritmu.</p>
         </div>
 
-        <!-- Container Pembungkus Card -->
+        <!-- Card -->
         <div class="max-w-8xl mx-auto flex flex-wrap justify-center gap-10 p-20 bg-[#FDFCF8]">
 
             <!-- Card 1: Mobile Legends -->
@@ -170,11 +169,11 @@
         </div>
     </section>
 
-    {{-- Section Mobile Legends Players --}}
+    {{-- Mobile Legends Players --}}
     <div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6 player-section">
         <h1 class="text-2xl flex justify-start w-full font-bold text-black mt-20 px-9 pl-35">Mobile Legends</h1>
         <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
-            {{-- Card Songmin --}}
+            {{-- Songmin --}}
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Songmin.png') }}" alt="Songmin" /></a>
                 <div class="p-4 text-left">
@@ -186,7 +185,7 @@
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
             </div>
-            {{-- Card Michh --}}
+            {{-- Michh --}}
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Michh.png') }}" alt="Michh" /></a>
                 <div class="p-4 text-left">
@@ -198,7 +197,7 @@
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
             </div>
-            {{-- Card Lizz --}}
+            {{-- Lizz --}}
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Lizz.png') }}" alt="Lizz" /></a>
                 <div class="p-4 text-left">
@@ -210,7 +209,7 @@
                     <a href="#" class="block text-center text-white bg-[#22c55e] hover:bg-[#16a34a] font-medium text-sm py-2 rounded-full transition-colors duration-200">Add +</a>
                 </div>
             </div>
-            {{-- Card Asa --}}
+            {{-- Asa --}}
             <div class="player-card bg-[#D9D9D9] block w-66 border border-black rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
                 <a href="#"><img class="w-full h-auto object-cover" src="{{ asset('images/Pemain/Asa.png') }}" alt="Asa" /></a>
                 <div class="p-4 text-left">
@@ -225,7 +224,7 @@
         </div>
     </div>
 
-    {{-- Section PUBG Players --}}
+    {{-- PUBG Players --}}
     <div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6 player-section">
         <h1 class="text-2xl flex justify-start w-full font-bold text-black mt-20 px-9 pl-35">PUBG</h1>
         <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
@@ -276,7 +275,7 @@
         </div>
     </div>
 
-    {{-- Section Valorant Players --}}
+    {{-- Valorant Players --}}
     <div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6 player-section">
         <h1 class="text-2xl flex justify-start w-full font-bold text-black mt-20 px-9 pl-35">Valorant</h1>
         <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
@@ -327,7 +326,7 @@
         </div>
     </div>
 
-    {{-- Section FC Mobile Players --}}
+    {{-- FC Mobile Players --}}
     <div class="bg-white p-8 font-sans items-center justify-center flex flex-col gap-6 player-section">
         <h1 class="text-2xl flex justify-start w-full font-bold text-black mt-20 px-9 pl-35">FC Mobile</h1>
         <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-10 p-6">
@@ -378,16 +377,16 @@
         </div>
     </div>
 
-    {{-- Footer Section --}}
+    {{-- Footer --}}
     <footer class="bg-[#E5E5E5] text-black py-12 px-6 md:px-16 lg:px-24">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
-            <!-- Bagian Logo & Nama Brand -->
+          
             <div class="flex items-center gap-5">
                 <img src="{{ asset('images/logo.png') }}" alt="PlayAll Logo" class="w-35 h-35 object-contain" />
                 <span class="text-2xl font-bold tracking-tight text-black">PlayAll</span>
             </div>
 
-            <!-- Bagian Menu Navigasi & Account -->
+            <!-- Bagian Menu -->
             <div class="flex md:gap-32">
                 <!-- Column 1: Navigation -->
                 <div>
