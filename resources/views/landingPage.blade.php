@@ -14,7 +14,7 @@
 
     {{-- Navbar --}}
     <nav class="w-full fixed top-0 z-50 flex flex-row h-16 px-6 bg-[#D9D9D9] border-b border-gray-300 items-center justify-between shadow-xs">
-        <!-- Logo -->
+        <!-- Logo & Brand -->
         <div class="flex items-center gap-3">
             <a href="{{ url('/') }}" class="flex items-center gap-2">
                 <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-9 h-9 object-contain">
@@ -23,7 +23,7 @@
                 PlayAll
             </span>
         </div>
-<!-- Search Bar  -->
+<!-- Search Bar (Pastikan id searchDropdown ada di sini) -->
 <div class="relative flex items-center">
     <span class="absolute left-3.5 text-gray-500 flex items-center pointer-events-none">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
@@ -39,6 +39,7 @@
 
     <!-- Kotak Dropdown Hasil Pencarian -->
     <div id="searchDropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto">
+        <!-- Hasil AJAX akan muncul di sini -->
     </div>
 </div>
 
@@ -47,6 +48,29 @@
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat.index') }}">Chat</a>
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite">Game Favorit</a>
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ url('/') }}">Home</a>
+        </div>
+
+        <!-- Profile Photo -->
+        <div class="flex items-center gap-6">
+            @auth
+            {{-- Foto Profil User jika sudah login --}}
+            <a href="{{ route('profile.edit') }}" class="group relative flex items-center justify-center">
+                @if(Auth::user()->avatar)
+                <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
+                    alt="{{ Auth::user()->name }}"
+                    class="w-10 h-10 rounded-full object-cover border-2 border-gray-400 group-hover:border-black transition-all shadow-xs">
+                @else
+                {{-- Avatar Default jika user belum upload foto --}}
+                <div class="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold text-sm border-2 border-gray-500 group-hover:border-black transition-all shadow-xs">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                </div>
+                @endif
+            </a>
+            @else
+            {{-- Tampilan jika belum login --}}
+            <a class="text-black font-bold text-sm hover:underline transition-colors" href="{{ route('register') }}">Sign Up</a>
+            <a class="text-black font-bold text-sm hover:underline transition-colors" href="{{ route('login') }}">Login</a>
+            @endauth
         </div>
     </nav>
 
@@ -357,7 +381,7 @@
     {{-- Footer --}}
     <footer class="bg-[#E5E5E5] text-black py-12 px-6 md:px-16 lg:px-24">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
-           
+        
             <div class="flex items-center gap-5">
                 <img src="{{ asset('images/logo.png') }}" alt="PlayAll Logo" class="w-35 h-35 object-contain" />
                 <span class="text-2xl font-bold tracking-tight text-black">PlayAll</span>
@@ -365,6 +389,7 @@
 
             <!-- Bagian Menu -->
             <div class="flex md:gap-32">
+                <!-- Column 1: Navigation -->
                 <div>
                     <h3 class="font-bold text-lg mb-4 text-black">Navigation</h3>
                     <ul class="space-y-3 text-sm text-gray-800">
@@ -374,6 +399,7 @@
                     </ul>
                 </div>
 
+                <!-- Column 2: Account -->
                 <div>
                     <h3 class="font-bold text-lg mb-4 text-black">Account</h3>
                     <ul class="space-y-3 text-sm text-gray-800">
