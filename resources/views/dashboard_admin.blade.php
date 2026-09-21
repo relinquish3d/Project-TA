@@ -37,28 +37,43 @@
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ url('/') }}">Home</a>
         </div>
 
-        <!-- Auth Actions / Profile Photo -->
-        <div class="flex items-center gap-6">
-            @auth
-            {{-- Foto Profil User jika sudah login --}}
-            <a href="{{ route('profile.edit') }}" class="group relative flex items-center justify-center">
-                @if(Auth::user()->avatar)
-                <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
-                    alt="{{ Auth::user()->name }}"
-                    class="w-10 h-10 rounded-full object-cover border-2 border-gray-400 group-hover:border-black transition-all shadow-xs">
-                @else
-                {{-- Avatar Default jika user belum upload foto --}}
-                <div class="w-10 h-10 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold text-sm border-2 border-gray-500 group-hover:border-black transition-all shadow-xs">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
-                @endif
-            </a>
-            @else
-            {{-- Tampilan jika belum login --}}
-            <a class="text-black font-bold text-sm hover:underline transition-colors" href="{{ route('register') }}">Sign Up</a>
-            <a class="text-black font-bold text-sm hover:underline transition-colors" href="{{ route('login') }}">Login</a>
-            @endauth
-        </div>
+                    <!-- ========== AVATAR BUTTON ========== -->
+                    <button
+                        id="menuButton"
+                        type="button"
+                        onclick="toggleMenu(event)"
+                        aria-label="Buka menu profil"
+                        aria-expanded="false"
+                        class="group flex items-center gap-2 rounded-full outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+
+                        @if(Auth::user()->avatar)
+
+                            <!-- Avatar dari database -->
+                            <img
+                                src="{{ asset('storage/' . Auth::user()->avatar) }}"
+                                alt="{{ Auth::user()->name }}"
+                                class="h-10 w-10 rounded-full border-2 border-gray-400 object-cover shadow-sm transition group-hover:border-black">
+
+                        @else
+
+                            <!-- Avatar default -->
+                            <div
+                                class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-500 bg-gray-400 text-sm font-bold text-white shadow-sm transition group-hover:border-black">
+
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+
+                            </div>
+
+                        @endif
+
+                        <!-- Ikon panah dropdown -->
+                        <i
+                            data-lucide="chevron-down"
+                            class="h-4 w-4 text-gray-700 transition-transform duration-200"
+                            id="chevronIcon">
+                        </i>
+
+                    </button>
         
         <div class="absolute right-6 top-3.5 z-40">
             <button id="menuButton" 
@@ -68,11 +83,24 @@
                 <i data-lucide="more-vertical" class="w-6 h-5"></i>
             </button>
 
-            <!-- Dropdown Menu -->
-            <div id="dropdownMenu" 
-                 class="hidden absolute right-0 mt-2 w-44 bg-white border border-gray-300 rounded-2xl shadow-lg z-50 overflow-hidden transform opacity-0 scale-95 transition-all duration-150 ease-out origin-top-right">
-                
-                    <div class="border-t border-gray-200 my-1"></div>
+
+                    <!-- ========== DROPDOWN MENU ========== -->
+                    <div
+                        id="dropdownMenu"
+                        class="absolute right-0 top-14 hidden w-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl">
+
+                        <!-- User Information -->
+                        <div class="border-b border-gray-200 px-4 py-3">
+
+                            <p class="truncate text-sm font-semibold text-gray-800">
+                                {{ Auth::user()->name }}
+                            </p>
+
+                            <p class="truncate text-xs text-gray-500">
+                                {{ Auth::user()->email }}
+                            </p>
+
+                        </div>
 
                     <!-- Opsi Logout -->
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
@@ -89,40 +117,83 @@
     <p class="">
         Halo, {{ auth()->user()->name }}
     </p>
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
 
-v<script>
-    // Aktifkan ikon Lucide
-    lucide.createIcons();
+        // Aktifkan ikon Lucide
+        lucide.createIcons();
 
-    function toggleMenu(event) {
-        event.stopPropagation();
 
-        const dropdown = document.getElementById('dropdownMenu');
+        // Fungsi buka/tutup dropdown
+        function toggleMenu(event) {
 
-        dropdown.classList.toggle('hidden');
+            event.stopPropagation();
 
-        if (!dropdown.classList.contains('hidden')) {
-            setTimeout(() => {
-                dropdown.classList.remove('opacity-0', 'scale-95');
-                dropdown.classList.add('opacity-100', 'scale-100');
-            }, 10);
-        } else {
-            dropdown.classList.remove('opacity-100', 'scale-100');
-            dropdown.classList.add('opacity-0', 'scale-95');
+            const dropdown = document.getElementById('dropdownMenu');
+            const button = document.getElementById('menuButton');
+            const chevron = document.getElementById('chevronIcon');
+
+            if (!dropdown || !button) return;
+
+            const isHidden = dropdown.classList.contains('hidden');
+
+            if (isHidden) {
+
+                // Tampilkan dropdown
+                dropdown.classList.remove('hidden');
+
+                button.setAttribute('aria-expanded', 'true');
+
+                // Putar ikon panah
+                if (chevron) {
+                    chevron.classList.add('rotate-180');
+                }
+
+            } else {
+
+                // Sembunyikan dropdown
+                dropdown.classList.add('hidden');
+
+                button.setAttribute('aria-expanded', 'false');
+
+                // Kembalikan ikon panah
+                if (chevron) {
+                    chevron.classList.remove('rotate-180');
+                }
+
+            }
+
         }
-    }
 
-    // Tutup dropdown jika klik di luar menu
-    document.addEventListener('click', function (event) {
-        const dropdown = document.getElementById('dropdownMenu');
-        const button = document.getElementById('menuButton');
 
-        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
-            dropdown.classList.add('hidden', 'opacity-0', 'scale-95');
-            dropdown.classList.remove('opacity-100', 'scale-100');
-        }
-    });
-</script>
+        // Tutup dropdown jika klik di luar
+        document.addEventListener('click', function(event) {
+
+            const dropdown = document.getElementById('dropdownMenu');
+            const button = document.getElementById('menuButton');
+            const chevron = document.getElementById('chevronIcon');
+
+            if (!dropdown || !button) return;
+
+            if (
+                !dropdown.contains(event.target) &&
+                !button.contains(event.target)
+            ) {
+
+                dropdown.classList.add('hidden');
+
+                button.setAttribute('aria-expanded', 'false');
+
+                if (chevron) {
+                    chevron.classList.remove('rotate-180');
+                }
+
+            }
+
+        });
+
+    </script>
+ 
 </body>
 
 </html>
