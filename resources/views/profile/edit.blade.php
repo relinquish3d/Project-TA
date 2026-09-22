@@ -18,27 +18,50 @@
             <h1 class="text-xl font-bold italic text-black">Your profile</h1>
         </div>
 
-        <!-- Pop-up Titik Tiga ) -->
+        <!-- Pop-up Titik Tiga -->
         <div class="absolute right-6 top-3.5 z-40">
             <button id="menuButton" 
                     onclick="toggleMenu(event)" 
-                    class="p-2 text-black hover:bg-gray-300 rounded-full transition focus:outline-none"
+                    class="relative p-2 text-black hover:bg-gray-300 rounded-full transition focus:outline-none"
                     aria-label="Options">
                 <i data-lucide="more-vertical" class="w-6 h-6"></i>
+                @if(isset($inProgressReportsCount) && $inProgressReportsCount > 0)
+                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-amber-500 rounded-full ring-2 ring-white"></span>
+                @endif
             </button>
 
             <!-- Dropdown Menu -->
             <div id="dropdownMenu" 
-                 class="hidden absolute right-0 mt-2 w-44 bg-white border border-gray-300 rounded-2xl shadow-lg z-50 overflow-hidden transform opacity-0 scale-95 transition-all duration-150 ease-out origin-top-right">
+                 class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-2xl shadow-xl z-50 overflow-hidden transform opacity-0 scale-95 transition-all duration-150 ease-out origin-top-right">
                 
                 <div class="py-1">
-                  <div class="py-1">
                     <!-- Report -->
                     <button type="button" 
                             onclick="openReportModal()" 
-                            class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition">
-                        <i data-lucide="flag" class="w-4 h-4 text-amber-500"></i>
-                        <span>Report</span>
+                            class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="flag" class="w-4 h-4 text-amber-500"></i>
+                            <span>Report</span>
+                        </div>
+                    </button>
+
+                    <!-- Inbox (Ticketing System) -->
+                    <button type="button" 
+                            onclick="openInboxModal()" 
+                            class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="inbox" class="w-4 h-4 text-blue-600"></i>
+                            <span>Inbox</span>
+                        </div>
+                        @if(isset($inProgressReportsCount) && $inProgressReportsCount > 0)
+                            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+                                {{ $inProgressReportsCount }} proses
+                            </span>
+                        @elseif(isset($reports) && $reports->count() > 0)
+                            <span class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-gray-100 text-gray-600">
+                                {{ $reports->count() }}
+                            </span>
+                        @endif
                     </button>
 
                     <div class="border-t border-gray-200 my-1"></div>
@@ -58,7 +81,7 @@
     </header>
 
     <!-- REPORT -->
-    <div id="reportModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+    <div id="reportModal" onclick="if(event.target === this) closeReportModal()" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white w-full max-w-lg mx-4 rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="reportModalContent">
             
             <!-- Modal Header -->
@@ -66,8 +89,8 @@
                 <div class="flex items-center gap-2">
                     <h3 class="text-lg font-bold text-gray-800">Report Akun</h3>
                 </div>
-                <button onclick="closeReportModal()" class="p-2 text-gray-black hover:text-gray-600 rounded-full hover:bg-gray-100 transition">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                <button type="button" onclick="closeReportModal()" class="p-2 text-gray-700 hover:text-gray-900 rounded-full hover:bg-gray-100 transition cursor-pointer" aria-label="Close">
+                    <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
                 </button>
             </div>
 
@@ -112,7 +135,7 @@
 
                 <!-- Tombol Aksi -->
                 <div class="flex items-center justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition">
+                    <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition cursor-pointer">
                         Batal
                     </button>
                     <button type="submit" class="px-5 py-2.5 text-sm font-semibold text-black bg-[#F3F0E9] hover:bg-[#D9D9D9] rounded-xl shadow-md transition flex items-center gap-2">
@@ -122,6 +145,133 @@
                 </div>
             </form>
 
+        </div>
+    </div>
+
+    <!-- INBOX TICKETING MODAL -->
+    <div id="inboxModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-2xl mx-4 rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="inboxModalContent">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 bg-[#D9D9D9] border-b border-gray-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-xs">
+                        <i data-lucide="inbox" class="w-5 h-5 text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight">Inbox Tiket Laporan</h3>
+                        <p class="text-xs text-gray-600">Pantau status penanganan laporan masalah akun Anda</p>
+                    </div>
+                </div>
+                <button onclick="closeInboxModal()" class="p-2 text-gray-700 hover:text-black rounded-full hover:bg-white/50 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Filter Status Bar -->
+            <div class="px-6 pt-3 pb-3 bg-gray-50 border-b border-gray-200 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-1.5 bg-gray-200/80 p-1 rounded-xl text-xs font-semibold">
+                    <button type="button" onclick="filterInbox('all', this)" class="inbox-filter-btn px-3 py-1.5 rounded-lg transition bg-white text-black shadow-xs" data-status="all">
+                        Semua (<span id="countAll">{{ isset($reports) ? $reports->count() : 0 }}</span>)
+                    </button>
+                    <button type="button" onclick="filterInbox('in_progress', this)" class="inbox-filter-btn px-3 py-1.5 rounded-lg text-gray-600 hover:text-black transition" data-status="in_progress">
+                        <span class="inline-block w-2 h-2 rounded-full bg-amber-500 mr-1"></span>
+                        Sedang Diproses (<span id="countInProgress">{{ $inProgressReportsCount ?? 0 }}</span>)
+                    </button>
+                    <button type="button" onclick="filterInbox('completed', this)" class="inbox-filter-btn px-3 py-1.5 rounded-lg text-gray-600 hover:text-black transition" data-status="completed">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-1"></span>
+                        Selesai (<span id="countCompleted">{{ $completedReportsCount ?? 0 }}</span>)
+                    </button>
+                </div>
+
+                <button type="button" onclick="closeInboxModal(); openReportModal();" class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-800 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-3 py-1.5 rounded-xl transition">
+                    <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+                    Buat Laporan Baru
+                </button>
+            </div>
+
+            <!-- Ticket List Container -->
+            <div class="p-6 overflow-y-auto space-y-4 flex-1 bg-[#FDFCF8]" id="ticketsContainer">
+                @if(isset($reports) && $reports->count() > 0)
+                    @foreach($reports as $report)
+                        <div class="ticket-item bg-white border border-gray-200 rounded-2xl p-4 shadow-xs hover:shadow-md transition" data-status="{{ $report->status }}">
+                            <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-gray-100 text-gray-800 border border-gray-300 font-mono">
+                                        {{ $report->ticket_code }}
+                                    </span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-blue-50 text-blue-700 border border-blue-200">
+                                        {{ $report->category_label }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-gray-400">
+                                        {{ $report->created_at ? $report->created_at->format('d M Y, H:i') : '' }}
+                                    </span>
+                                    @if($report->status === 'completed')
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
+                                            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                            Selesai
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300 shadow-2xs">
+                                            <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-600 animate-pulse"></i>
+                                            Sedang Diproses
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <p class="text-sm text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100 leading-relaxed">
+                                {{ $report->description }}
+                            </p>
+
+                            @if($report->attachment)
+                                <div class="mt-3 flex items-center gap-3">
+                                    <span class="text-xs font-semibold text-gray-500">Bukti Lampiran:</span>
+                                    <a href="{{ asset('storage/' . $report->attachment) }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 hover:underline bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
+                                        <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                                        Lihat Gambar Lampiran
+                                    </a>
+                                </div>
+                            @endif
+
+                            @if($report->admin_notes)
+                                <div class="mt-3 p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl">
+                                    <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-800 mb-1">
+                                        <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                        Tanggapan / Catatan Admin:
+                                    </div>
+                                    <p class="text-xs text-emerald-900 leading-relaxed">{{ $report->admin_notes }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                @else
+                    <div id="emptyInboxState" class="py-12 flex flex-col items-center justify-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                            <i data-lucide="inbox" class="w-8 h-8 text-gray-400"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-gray-700">Belum Ada Tiket Laporan</h4>
+                        <p class="text-xs text-gray-500 max-w-xs mt-1">Anda belum pernah mengirim laporan masalah. Laporan yang Anda buat akan muncul di sini beserta status penanganannya.</p>
+                        <button type="button" onclick="closeInboxModal(); openReportModal();" class="mt-4 px-4 py-2 text-xs font-semibold text-black bg-[#D9D9D9] hover:bg-gray-300 rounded-xl transition flex items-center gap-2">
+                            <i data-lucide="flag" class="w-4 h-4"></i>
+                            Buat Laporan Sekarang
+                        </button>
+                    </div>
+                @endif
+                <div id="noFilteredTickets" class="hidden py-8 flex flex-col items-center justify-center text-center">
+                    <p class="text-xs text-gray-500">Tidak ada tiket dengan status ini.</p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex items-center justify-between px-6 py-3 bg-gray-50 border-t border-gray-200">
+                <span class="text-xs text-gray-500">Status diperbarui otomatis oleh sistem</span>
+                <button type="button" onclick="closeInboxModal()" class="px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-200 rounded-xl transition">
+                    Tutup
+                </button>
+            </div>
         </div>
     </div>
 
@@ -264,29 +414,6 @@
         </form>
     </div>
 
-    <!-- Modal Form Report -->
-    <div id="reportModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border border-gray-100 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-                    <i data-lucide="alert-circle" class="w-5 h-5 text-amber-500"></i>
-                    Report User / Content
-                </h3>
-                <button type="button" onclick="closeReportModal()" class="text-gray-400 hover:text-black text-xl font-bold">&times;</button>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Alasan Pelaporan</label>
-                <textarea rows="3" placeholder="Tuliskan alasan pelaporan Anda..." class="w-full p-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black text-sm"></textarea>
-            </div>
-
-            <div class="flex justify-end gap-3 pt-2">
-                <button type="button" onclick="closeReportModal()" class="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition">Batal</button>
-                <button type="button" onclick="submitReport()" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition">Kirim Laporkan</button>
-            </div>
-        </div>
-    </div>
-
     <!-- popup dan foto -->
     <script>
         lucide.createIcons();
@@ -309,6 +436,7 @@
         function toggleMenu(event) {
             event.stopPropagation();
             const dropdown = document.getElementById('dropdownMenu');
+            if (!dropdown) return;
             const isHidden = dropdown.classList.contains('hidden');
 
             if (isHidden) {
@@ -324,6 +452,7 @@
 
         function closeMenu() {
             const dropdown = document.getElementById('dropdownMenu');
+            if (!dropdown) return;
             dropdown.classList.remove('opacity-100', 'scale-100');
             dropdown.classList.add('opacity-0', 'scale-95');
             setTimeout(() => {
@@ -337,18 +466,49 @@
             const modal = document.getElementById('reportModal');
             const content = document.getElementById('reportModalContent');
             
+            if (modal && content) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                    content.classList.add('scale-100');
+                }, 10);
+            }
+            lucide.createIcons();
+        }
+
+        function closeReportModal() {
+            const modal = document.getElementById('reportModal');
+            const content = document.getElementById('reportModalContent');
+            
+            if (modal && content) {
+                modal.classList.add('opacity-0');
+                content.classList.remove('scale-100');
+                content.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Inbox Modal
+        function openInboxModal() {
+            closeMenu();
+            const modal = document.getElementById('inboxModal');
+            const content = document.getElementById('inboxModalContent');
+            
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 content.classList.remove('scale-95');
                 content.classList.add('scale-100');
             }, 10);
+            lucide.createIcons();
         }
 
-        // Fungsi Tutup Modal Report
-        function closeReportModal() {
-            const modal = document.getElementById('reportModal');
-            const content = document.getElementById('reportModalContent');
+        function closeInboxModal() {
+            const modal = document.getElementById('inboxModal');
+            const content = document.getElementById('inboxModalContent');
             
             modal.classList.add('opacity-0');
             content.classList.remove('scale-100');
@@ -356,6 +516,39 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
             }, 300);
+        }
+
+        function filterInbox(status, btn) {
+            const buttons = document.querySelectorAll('.inbox-filter-btn');
+            buttons.forEach(b => {
+                b.classList.remove('bg-white', 'text-black', 'shadow-xs');
+                b.classList.add('text-gray-600');
+            });
+            if (btn) {
+                btn.classList.add('bg-white', 'text-black', 'shadow-xs');
+                btn.classList.remove('text-gray-600');
+            }
+
+            const items = document.querySelectorAll('.ticket-item');
+            let visibleCount = 0;
+            items.forEach(item => {
+                const itemStatus = item.getAttribute('data-status');
+                if (status === 'all' || itemStatus === status) {
+                    item.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            const noTicketsEl = document.getElementById('noFilteredTickets');
+            if (noTicketsEl) {
+                if (visibleCount === 0 && items.length > 0) {
+                    noTicketsEl.classList.remove('hidden');
+                } else {
+                    noTicketsEl.classList.add('hidden');
+                }
+            }
         }
 
         // Menampilkan nama file yang diunggah

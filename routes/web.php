@@ -81,7 +81,8 @@ Route::middleware('guest')->group(function () {
 //dasboard admin
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/dashboard/admin', function () {
-        return view('dashboard_admin');
+        $reports = \App\Models\Report::with('user')->latest()->get();
+        return view('dashboard_admin', compact('reports'));
     })->name('admin.dashboard');
 });
 
@@ -108,6 +109,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/categories', [CategoryGameController::class, 'store'])->name('admin.categories.store');
         Route::put('/categories/{id}', [CategoryGameController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{id}', [CategoryGameController::class, 'destroy'])->name('admin.categories.destroy');
+
+        // Manajemen Status Tiket Laporan (Report)
+        Route::patch('/reports/{id}/status', [\App\Http\Controllers\ReportController::class, 'updateStatus'])->name('admin.reports.status');
     });
 
 });
@@ -136,22 +140,9 @@ Route::middleware('auth')->group(function () {
 
 use App\Http\Controllers\ReportController;
 
-// Pastikan berada di dalam middleware auth jika laporan memerlukan login
+// Fitur Report & Inbox Ticketing
 Route::middleware(['auth'])->group(function () {
     Route::post('/report', [ReportController::class, 'store'])->name('report.store');
-});
-
-
-// Route::post('/report', function (Request $request) {
-//     // Logika sementara
-//     return redirect()->back()->with('success', 'Laporan berhasil dikirim!');
-// })->name('report.store');
-
-// Route untuk fitur live search user
-Route::get('/search-users', [UserController::class, 'search'])->name('users.search');
-
-
-// Pastikan di dalam middleware auth jika hanya bisa diakses akun login
-Route::middleware(['auth'])->group(function () {
-    Route::post('/report/store', [ReportController::class, 'store'])->name('report.store');
+    Route::get('/inbox', [ReportController::class, 'inbox'])->name('inbox');
+    Route::get('/reports/inbox', [ReportController::class, 'inbox'])->name('reports.inbox');
 });

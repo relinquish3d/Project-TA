@@ -50,11 +50,11 @@
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ url('/') }}">Home</a>
         </div>
 
-        <!-- Profile Photo -->
-        <div class="flex items-center gap-6">
+        <!-- Profile & Three-dot Menu -->
+        <div class="flex items-center gap-3">
             @auth
             {{-- Profil User jika sudah login --}}
-            <a href="{{ route('profile.edit') }}" class="group relative flex items-center justify-center">
+            <a href="{{ route('profile.edit') }}" class="group relative flex items-center justify-center" title="Profile">
                 @if(Auth::user()->avatar)
                 <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
                     alt="{{ Auth::user()->name }}"
@@ -473,6 +473,38 @@
             }
         });
     }
+
+    // Three-dot Dropdown Menu
+    function toggleMenu(event) {
+        event.stopPropagation();
+        const dropdown = document.getElementById('dropdownMenu');
+        if (!dropdown) return;
+        const isHidden = dropdown.classList.contains('hidden');
+
+        if (isHidden) {
+            dropdown.classList.remove('hidden');
+            setTimeout(() => {
+                dropdown.classList.remove('opacity-0', 'scale-95');
+                dropdown.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        } else {
+            closeMenu();
+        }
+    }
+
+    function closeMenu() {
+        const dropdown = document.getElementById('dropdownMenu');
+        if (!dropdown) return;
+        dropdown.classList.remove('opacity-100', 'scale-100');
+        dropdown.classList.add('opacity-0', 'scale-95');
+        setTimeout(() => {
+            dropdown.classList.add('hidden');
+        }, 150);
+    }
+
+    window.addEventListener('click', function() {
+        closeMenu();
+    });
 </script>
 </body>
 

@@ -17,8 +17,16 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        $reports = $user->reports()->latest()->get();
+        $inProgressReportsCount = $user->reports()->where('status', 'in_progress')->count();
+        $completedReportsCount = $user->reports()->where('status', 'completed')->count();
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'reports' => $reports,
+            'inProgressReportsCount' => $inProgressReportsCount,
+            'completedReportsCount' => $completedReportsCount,
         ]);
     }
 
