@@ -155,12 +155,8 @@
             <!-- Modal Header -->
             <div class="flex items-center justify-between px-6 py-4 bg-[#D9D9D9] border-b border-gray-200">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-xs">
-                        <i data-lucide="inbox" class="w-5 h-5 text-blue-600"></i>
-                    </div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800 leading-tight">Inbox Tiket Laporan</h3>
-                        <p class="text-xs text-gray-600">Pantau status penanganan laporan masalah akun Anda</p>
+                        <h3 class="text-lg font-bold text-gray-800 leading-tight">Inbox Tiket Laporan</h3>      
                     </div>
                 </div>
                 <button onclick="closeInboxModal()" class="p-2 text-gray-700 hover:text-black rounded-full hover:bg-white/50 transition">
@@ -267,8 +263,8 @@
 
             <!-- Modal Footer -->
             <div class="flex items-center justify-between px-6 py-3 bg-gray-50 border-t border-gray-200">
-                <span class="text-xs text-gray-500">Status diperbarui otomatis oleh sistem</span>
-                <button type="button" onclick="closeInboxModal()" class="px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-200 rounded-xl transition">
+                <p></p>
+                <button type="submit" class="px-5 py-2.5 text-sm font-semibold text-black bg-[#F3F0E9] hover:bg-[#D9D9D9] rounded-xl shadow-md transition flex items-center gap-2">
                     Tutup
                 </button>
             </div>
