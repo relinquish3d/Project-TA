@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UserController;
 
+Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/search-users', [UserController::class, 'search'])->name('users.search');
 
 Route::get('/', function () {
@@ -25,11 +26,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('patch.profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/chat/{id?}', [ChatController::class, 'show'])->name('chat.show');
@@ -70,7 +69,7 @@ Route::middleware('guest')->group(function () {
     Route::post('register/step-1', [RegisteredUserController::class, 'postStep1'])->name('register.step1');
 
     // Step 2: Create Profile
-    Route::get('create-profile', [RegisteredUserController::class, 'showCreateProfile'])->name('register.profile');
+    Route::get('create-profile', [RegisteredUserController::class, 'showCreateProfile'])->name('register.profile-create');
     Route::post('create-profile', [RegisteredUserController::class, 'postStep2'])->name('register.postProfile');
 
     // Step 3: Choose Game
@@ -117,21 +116,41 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::get('/api/search-users', function (Request $request) {
-    $query = $request->get('q');
-    if (!$query) return response()->json([]);
+// Route::get('/api/search-users', function (Request $request) {
 
-    $userId = Auth::id(); // Ambil ID user yang lagi login
+//     $query = $request->get('q');
 
-    $users = User::where('name', 'LIKE', '%' . $query . '%')
-                ->when($userId, function($q) use ($userId) {
-                    return $q->where('id', '!=', $userId);
-                })
-                ->limit(5)
-                ->get(['id', 'name']);
+//     if (!$query) {
+//         return response()->json([]);
+//     }
 
-    return response()->json($users);
-})->name('users.search');
+//     $userId = Auth::id();
+
+//     $users = User::where('name', 'LIKE', '%' . $query . '%')
+//         ->when($userId, function ($q) use ($userId) {
+//             $q->where('id', '!=', $userId);
+//         })
+//         ->limit(5)
+//         ->get();
+
+//     return response()->json(
+//         $users->map(function ($user) {
+
+//             return [
+//                 'id' => $user->id,
+//                 'name' => $user->name,
+
+//                 'avatar' => $user->avatar
+//                     ? asset('storage/' . $user->avatar)
+//                     : asset('images/default-avatar.png'),
+
+//                 'url' => route('profile.show', $user->id),
+//             ];
+
+//         })
+//     );
+
+// })->name('api.users.search');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -145,4 +164,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/report', [ReportController::class, 'store'])->name('report.store');
     Route::get('/inbox', [ReportController::class, 'inbox'])->name('inbox');
     Route::get('/reports/inbox', [ReportController::class, 'inbox'])->name('reports.inbox');
+});
+
+// Fitur Rating / Ulasan User
+use App\Http\Controllers\RatingController;
+Route::middleware(['auth'])->group(function () {
+    Route::post('/rating/{user}', [RatingController::class, 'store'])->name('rating.store');
 });

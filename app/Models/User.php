@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Rating;
+
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -75,6 +77,21 @@ class User extends Authenticatable
         return $this->hasMany(Invite::class, 'receiver_id', 'id');
     }
 
+    public function inviteWith($userId)
+    {
+        return Invite::where(function ($q) use ($userId) {
+            $q->where('sender_id', $this->id)->where('receiver_id', $userId);
+        })->orWhere(function ($q) use ($userId) {
+            $q->where('sender_id', $userId)->where('receiver_id', $this->id);
+        })->first();
+    }
+
+    public function isFriendWith($userId): bool
+    {
+        $invite = $this->inviteWith($userId);
+        return $invite && $invite->status === 'accepted';
+    }
+
     /* --- RELASI CHAT / MESSAGE --- */
     public function messages()
     {
@@ -103,5 +120,36 @@ class User extends Authenticatable
     public function reports()
     {
         return $this->hasMany(Report::class, 'user_id', 'id');
+    }
+
+    /* --- RELASI RATING --- */
+
+    /**
+     * Rating yang DITERIMA oleh user ini (orang lain merating user ini).
+     * Gunakan: $user->ratingsReceived
+     */
+    public function ratingsReceived()
+    {
+        return $this->hasMany(Rating::class, 'target_id', 'id');
+    }
+
+    /**
+     * Rating yang DIBERIKAN oleh user ini (user ini merating orang lain).
+     * Gunakan: $user->ratingsGiven
+     */
+    public function ratingsGiven()
+    {
+        return $this->hasMany(Rating::class, 'reviewer_id', 'id');
+    }
+
+    /**
+     * Hitung rata-rata rating yang diterima user.
+     * Jika belum ada rating sama sekali, default 5.00.
+     * Return: float (misal: 4.50, 3.75, 5.00)
+     */
+    public function averageRating(): float
+    {
+        $avg = $this->ratingsReceived()->avg('stars');
+        return $avg !== null ? round((float)$avg, 2) : 5.00;
     }
 }

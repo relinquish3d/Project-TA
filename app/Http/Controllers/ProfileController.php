@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Invite;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -79,5 +81,28 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/dashboard');
+    }
+    public function show(User $user) {
+        $authUser = Auth::user();
+        $reports = $authUser ? $authUser->reports()->latest()->get() : collect();
+        $inProgressReportsCount = $authUser ? $authUser->reports()->where('status', 'in_progress')->count() : 0;
+        $completedReportsCount = $authUser ? $authUser->reports()->where('status', 'completed')->count() : 0;
+
+        // --- DATA RATING ---
+        // Ambil semua rating yang DITERIMA oleh user profil ini (beserta data reviewer)
+        $ratings = $user->ratingsReceived()->with('reviewer')->latest()->get();
+        // Hitung rata-rata rating (default 5.00 jika belum ada)
+        $averageRating = $user->averageRating();
+        // Jumlah total ulasan
+        $totalRatings = $ratings->count();
+        // Cek apakah user yang sedang login sudah pernah merating user ini
+        $existingRating = $authUser
+            ? \App\Models\Rating::where('reviewer_id', $authUser->id)->where('target_id', $user->id)->first()
+            : null;
+
+        return view('profile.show', compact(
+            'user', 'reports', 'inProgressReportsCount', 'completedReportsCount',
+            'ratings', 'averageRating', 'totalRatings', 'existingRating'
+        ));
     }
 }
