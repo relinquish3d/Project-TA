@@ -236,7 +236,7 @@
                                 <div class="mt-3 p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl">
                                     <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-800 mb-1">
                                         <i data-lucide="message-square" class="w-3.5 h-3.5 text-emerald-600"></i>
-                                        Tanggapan / Catatan Admin:
+                                        Catatan Admin:
                                     </div>
                                     <p class="text-xs text-emerald-900 leading-relaxed">{{ $report->admin_notes }}</p>
                                 </div>
