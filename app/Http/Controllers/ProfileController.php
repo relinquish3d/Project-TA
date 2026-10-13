@@ -24,11 +24,36 @@ class ProfileController extends Controller
         $inProgressReportsCount = $user->reports()->where('status', 'in_progress')->count();
         $completedReportsCount = $user->reports()->where('status', 'completed')->count();
 
+        // Ambil data dari kolom database favorite_games
+        $rawGames = is_string($user->favorite_games) ? json_decode($user->favorite_games, true) : ($user->favorite_games ?? []);
+        
+        $favoriteGames = [];
+        foreach ((array)$rawGames as $gameName) {
+            // Pemetaan nama file di folder public/images/Game/
+            $fileName = 'game.png'; // Default
+            if (stripos($gameName, 'PUBG') !== false) {
+                $fileName = 'PUBG.png';
+            } elseif (stripos($gameName, 'ML') !== false || stripos($gameName, 'Mobile Legends') !== false) {
+                $fileName = 'ML.png';
+            } elseif (stripos($gameName, 'Valorant') !== false) {
+                $fileName = 'Valorant.png';
+            } elseif (stripos($gameName, 'FC') !== false) {
+                $fileName = 'FC.png';
+            }
+
+            $favoriteGames[] = [
+                'name' => $gameName,
+                'image' => 'images/Game/' . $fileName,
+                'rating' => '5.00'
+            ];
+        }
+
         return view('profile.edit', [
             'user' => $user,
             'reports' => $reports,
             'inProgressReportsCount' => $inProgressReportsCount,
             'completedReportsCount' => $completedReportsCount,
+            'favoriteGames' => $favoriteGames,
         ]);
     }
 
@@ -82,27 +107,51 @@ class ProfileController extends Controller
 
         return Redirect::to('/dashboard');
     }
-    public function show(User $user) {
+
+    /**
+     * Display the specified user's profile.
+     */
+    public function show(User $user): View
+    {
         $authUser = Auth::user();
         $reports = $authUser ? $authUser->reports()->latest()->get() : collect();
         $inProgressReportsCount = $authUser ? $authUser->reports()->where('status', 'in_progress')->count() : 0;
         $completedReportsCount = $authUser ? $authUser->reports()->where('status', 'completed')->count() : 0;
 
         // --- DATA RATING ---
-        // Ambil semua rating yang DITERIMA oleh user profil ini (beserta data reviewer)
         $ratings = $user->ratingsReceived()->with('reviewer')->latest()->get();
-        // Hitung rata-rata rating (default 5.00 jika belum ada)
         $averageRating = $user->averageRating();
-        // Jumlah total ulasan
         $totalRatings = $ratings->count();
-        // Cek apakah user yang sedang login sudah pernah merating user ini
         $existingRating = $authUser
             ? \App\Models\Rating::where('reviewer_id', $authUser->id)->where('target_id', $user->id)->first()
             : null;
 
+        // Ambil data game favorit dari database user profil yang sedang dilihat
+        $rawGames = is_string($user->favorite_games) ? json_decode($user->favorite_games, true) : ($user->favorite_games ?? []);
+        
+        $favoriteGames = [];
+        foreach ((array)$rawGames as $gameName) {
+            $fileName = 'game.png'; // Default
+            if (stripos($gameName, 'PUBG') !== false) {
+                $fileName = 'PUBG.png';
+            } elseif (stripos($gameName, 'ML') !== false || stripos($gameName, 'Mobile Legends') !== false) {
+                $fileName = 'ML.png';
+            } elseif (stripos($gameName, 'Valorant') !== false) {
+                $fileName = 'Valorant.png';
+            } elseif (stripos($gameName, 'FC') !== false) {
+                $fileName = 'FC.png';
+            }
+
+            $favoriteGames[] = [
+                'name' => $gameName,
+                'image' => 'images/Game/' . $fileName,
+                'rating' => '5.00'
+            ];
+        }
+
         return view('profile.show', compact(
             'user', 'reports', 'inProgressReportsCount', 'completedReportsCount',
-            'ratings', 'averageRating', 'totalRatings', 'existingRating'
+            'ratings', 'averageRating', 'totalRatings', 'existingRating', 'favoriteGames'
         ));
     }
 }
