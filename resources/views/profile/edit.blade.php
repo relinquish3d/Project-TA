@@ -408,7 +408,7 @@
                                         <!-- Rating -->
                                         <div class="flex items-center justify-center gap-1.5 mt-1 bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60 shadow-xs">
                                             <i data-lucide="star" class="w-4 h-4 fill-[#FFC107] text-[#FFC107]"></i>
-                                            <span class="text-xs font-bold text-amber-900">{{ $game['rating'] }} Rating</span>
+                                            <span class="text-xs font-bold text-amber-900">{{ $game['rating'] }} Ratinng</span>
                                         </div>
                                     </div>
                                     @empty

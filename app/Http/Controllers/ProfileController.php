@@ -38,7 +38,7 @@ class ProfileController extends Controller
             } elseif (stripos($gameName, 'Valorant') !== false) {
                 $fileName = 'Valorant.png';
             } elseif (stripos($gameName, 'FC') !== false) {
-                $fileName = 'FC.png';
+                $fileName = 'FCM.png';
             }
 
             $favoriteGames[] = [
