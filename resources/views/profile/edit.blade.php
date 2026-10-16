@@ -276,19 +276,49 @@
     <!-- Main Container -->
     <div class="max-w-6xl mx-auto px-6 py-8">
 
-        <!-- notif update profile  -->
+        <!-- 🚨 NOTIF UPDATE PROFILE: PAS DI SEBELAH KIRI TITIK TIGA -->
         @if (session('status') === 'profile-updated')
-        <div class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl flex items-center justify-between">
-            <span>Profile berhasil diperbarui!</span>
-            <button onclick="this.parentElement.remove()" class="font-bold text-lg">&times;</button>
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="translate-x-4 opacity-0 scale-95"
+             x-transition:enter-end="translate-x-0 opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="translate-x-0 opacity-100"
+             x-transition:leave-end="translate-x-4 opacity-0"
+             class="absolute top-3.5 right-20 z-50 max-w-xs w-64 bg-emerald-600/90 backdrop-blur-xl border border-emerald-500/40 rounded-2xl p-2.5 shadow-md flex items-center justify-between"
+             x-cloak>
+            <div class="flex items-center gap-2">
+                <div class="bg-white/20 p-1 rounded-xl flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+                <span class="text-xs font-bold text-white tracking-wide leading-tight">Profile berhasil diperbarui!</span>
+            </div>
+            <button type="button" @click="show = false" class="text-white/60 hover:text-white font-medium text-lg px-1">&times;</button>
         </div>
         @endif
 
-        <!-- notif report -->
+       <!-- 🚨 NOTIF REPORT: PAS DI SEBELAH KIRI TITIK TIGA -->
         @if (session('success_report'))
-        <div class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl flex items-center justify-between shadow-sm">
-            <span>{{ session('success_report') }}</span>
-            <button onclick="this.parentElement.remove()" class="font-bold text-lg hover:text-green-900">&times;</button>
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="translate-x-4 opacity-0 scale-95"
+             x-transition:enter-end="translate-x-0 opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="translate-x-0 opacity-100"
+             x-transition:leave-end="translate-x-4 opacity-0"
+             class="absolute top-3.5 right-20 z-50 max-w-xs w-64 bg-emerald-600/90 backdrop-blur-xl border border-emerald-500/40 rounded-2xl p-2.5 shadow-md flex items-center justify-between"
+             x-cloak>
+            <div class="flex items-center gap-2">
+                <div class="bg-white/20 p-1 rounded-xl flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+                <span class="text-xs font-bold text-white tracking-wide leading-tight">{{ session('success_report') }}</span>
+            </div>
+            <button type="button" @click="show = false" class="text-white/60 hover:text-white font-medium text-lg px-1">&times;</button>
         </div>
         @endif
 
@@ -376,57 +406,61 @@
                 <div class="lg:col-span-6 space-y-8">
                     <!-- Swiper.js CSS -->
                     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-                    <!-- Bagian Card Slider Logo Game (Sesuai Database) -->
+                                       <!-- Bagian Card Slider Logo Game (Sesuai Database) -->
                     <div class="w-full py-4">
                         <div class="flex items-center justify-center gap-2 mb-6">
                             <i data-lucide="gamepad-2" class="w-6 h-6 text-amber-500 animate-pulse"></i>
                             <h2 class="text-center font-bold italic text-xl tracking-wide text-black uppercase">Game Favorit</h2>
                         </div>
 
-                        <div class="relative max-w-sm mx-auto px-6">
-                            <!-- Swiper Container -->
-                            <div class="swiper gameLogoSwiper !pb-10 !px-2">
+                        <!-- 💡 KUNCI FIX: Ukuran luar dikunci w-[26rem] dan overflow-hidden dipasang DI SINI agar slide samping tersembunyi halus -->
+                        <div class="relative w-[26rem] mx-auto overflow-hidden px-14 !pb-10">
+                            
+                            <!-- Swiper Container dibuat visible agar bayangan logo tidak terpotong kaku saat digeser -->
+                            <div class="swiper gameLogoSwiper !overflow-visible">
                                 <div class="swiper-wrapper">
 
                                     @forelse($favoriteGames as $game)
                                     <!-- Slide Item -->
-                                    <div class="swiper-slide flex flex-col items-center justify-center group">
-                                        <div class="relative p-2 cursor-pointer transition-transform duration-300 group-hover:-translate-y-2">
-                                            <!-- Efek Glow -->
-                                            <div class="absolute inset-0 bg-red-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                                            <!-- Logo Container -->
-                                            <div class="relative w-40 h-40 flex items-center justify-center p-2 rounded-3xl bg-white/40 backdrop-blur-md border border-white/60 shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
-                                                <img src="{{ asset($game['image']) }}" alt="{{ $game['name'] }}" class="w-full h-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-110">
+                                    <div class="swiper-slide text-center">
+                                        <div class="flex flex-col items-center justify-center w-full">
+                                            
+                                            <!-- Wadah Posisi Logo -->
+                                            <div class="relative w-full flex items-center justify-center p-1">
+                                                <!-- Kotak Melengkung Premium -->
+                                                <div class="relative w-40 h-40 flex items-center justify-center p-1 rounded-3xl bg-white border-4 border-blue-950 shadow-[0_15px_30px_rgba(23,37,84,0.15)] overflow-hidden transition-transform duration-300 hover:scale-105">
+                                                    <img src="{{ asset($game['image']) }}" alt="{{ $game['name'] }}" class="w-full h-full object-cover block rounded-2xl">
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Nama Game -->
-                                        <h3 class="text-lg font-extrabold italic text-gray-900 mt-4 tracking-wide">{{ $game['name'] }}</h3>
+                                            <!-- Nama Game -->
+                                            <h3 class="text-lg font-extrabold italic text-gray-900 mt-4 tracking-wide truncate w-full px-1">{{ $game['name'] }}</h3>
 
-                                        <!-- Rating -->
-                                        <div class="flex items-center justify-center gap-1.5 mt-1 bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60 shadow-xs">
-                                            <i data-lucide="star" class="w-4 h-4 fill-[#FFC107] text-[#FFC107]"></i>
-                                            <span class="text-xs font-bold text-amber-900">{{ $game['rating'] }} Rating</span>
+                                            <!-- Rating -->
+                                            <div class="flex items-center justify-center gap-1.5 mt-2 bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60 shadow-xs w-fit mx-auto">
+                                                <i data-lucide="star" class="w-4 h-4 fill-[#FFC107] text-[#FFC107]"></i>
+                                                <span class="text-xs font-bold text-amber-900">{{ $game['rating'] }} Rating</span>
+                                            </div>
                                         </div>
                                     </div>
                                     @empty
-                                    <!-- Jika Kosong -->
-                                    <div class="swiper-slide flex flex-col items-center justify-center py-10">
-                                        <p class="text-xs text-gray-500 italic">Belum ada game favorit di database.</p>
+                                    <div class="swiper-slide text-center py-10">
+                                        <p class="text-sm text-gray-500 italic">Belum ada game favorit.</p>
                                     </div>
                                     @endforelse
 
                                 </div>
-
-                                <!-- Pagination & Tombol Navigasi (Hanya muncul jika item > 1) -->
-                                <div class="swiper-pagination !bottom-1"></div>
-                                <div class="swiper-button-next !w-9 !h-9 !text-black !bg-white/80 hover:!bg-white rounded-full shadow-md backdrop-blur-xs after:!text-xs after:!font-bold transition"></div>
-                                <div class="swiper-button-prev !w-9 !h-9 !text-black !bg-white/80 hover:!bg-white rounded-full shadow-md backdrop-blur-xs after:!text-xs after:!font-bold transition"></div>
                             </div>
+
+                            <!-- Pagination Titik-Titik ditaruh di bawah kontainer luar -->
+                            <div class="swiper-pagination !bottom-2"></div>
+
+                            <!-- Tombol Navigasi Panah otomatis terkunci pas melayang di luar sisi kiri dan kanan logo secara seimbang -->
+                            <div class="swiper-button-prev !w-9 !h-9 !text-black !bg-white hover:!bg-gray-100 rounded-full shadow-md border border-gray-200 after:!text-xs after:!font-black transition-all absolute left-1 top-16 z-50"></div>
+                            <div class="swiper-button-next !w-9 !h-9 !text-black !bg-white hover:!bg-gray-100 rounded-full shadow-md border border-gray-200 after:!text-xs after:!font-black transition-all absolute right-1 top-16 z-50"></div>
                         </div>
                     </div>
+
 
                     <!-- Swiper.js Script -->
                     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -440,7 +474,7 @@
 
                             new Swiper('.gameLogoSwiper', {
                                 slidesPerView: 1,
-                                spaceBetween: 20,
+                                spaceBetween: 100,
                                 loop: totalSlides > 1, // Jika cuma 1, loop dimatikan agar tidak duplikat
                                 centeredSlides: true,
                                 autoplay: totalSlides > 1 ? {
@@ -632,7 +666,7 @@
         });
     </script>
 
-    
+
 </body>
 
 </html>

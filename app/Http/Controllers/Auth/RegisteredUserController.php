@@ -36,6 +36,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $request->session()->put('register_step1', $validated);
+        $request->session()->save();
 
         return redirect()->route('register.profile');
     }
@@ -43,9 +44,9 @@ class RegisteredUserController extends Controller
     /**
      * Step 2: Form Create Profile
      */
-    public function showCreateProfile(): View|RedirectResponse
+    public function showCreateProfile(Request $request): View|RedirectResponse
     {
-        if (!session()->has('register_step1')) {
+        if (!$request->session()->has('register_step1')) {
             return redirect()->route('register');
         }
 
@@ -57,7 +58,7 @@ class RegisteredUserController extends Controller
      */
     public function postStep2(Request $request): RedirectResponse
     {
-        if (!session()->has('register_step1')) {
+        if (!$request->session()->has('register_step1')) {
             return redirect()->route('register');
         }
 
@@ -75,7 +76,11 @@ class RegisteredUserController extends Controller
             $validated['avatar'] = session('register_step2.avatar', null);
         }
 
+        // Menyimpan data profile ke session
         $request->session()->put('register_step2', $validated);
+        
+        // Memaksa Laravel menyimpan session ke storage saat ini juga agar tidak perlu klik 2 kali
+        $request->session()->save();
 
         return redirect()->route('register.game');
     }
@@ -83,9 +88,10 @@ class RegisteredUserController extends Controller
     /**
      * Step 3: Form Choose Game
      */
-    public function showChooseGame(): View|RedirectResponse
+    public function showChooseGame(Request $request): View|RedirectResponse
     {
-        if (!session()->has('register_step1') || !session()->has('register_step2')) {
+        // Menggunakan properti dari objek $request secara langsung untuk akurasi data
+        if (!$request->session()->has('register_step1') || !$request->session()->has('register_step2')) {
             return redirect()->route('register');
         }
 
@@ -96,19 +102,15 @@ class RegisteredUserController extends Controller
     /**
      * Proses Step 3 (Final Store ke Database)
      */
-    /**
-     * Proses Step 3 (Final Store ke Database)
-     */
     public function store(Request $request): RedirectResponse
     {
-        if (!session()->has('register_step1') || !session()->has('register_step2')) {
+        if (!$request->session()->has('register_step1') || !$request->session()->has('register_step2')) {
             return redirect()->route('register');
         }
 
-        $step1 = session()->get('register_step1');
-        $step2 = session()->get('register_step2');
+        $step1 = $request->session()->get('register_step1');
+        $step2 = $request->session()->get('register_step2');
 
-       
         $request->validate([
             'games' => ['required', 'array', 'min:1'],
             'games.*' => ['string'],
@@ -117,7 +119,7 @@ class RegisteredUserController extends Controller
             'games.*.required' => 'Silahkan pilih minimal 1 game!',
         ]);
 
-        //password hash google
+        // Password hash google / manual
         $password = !empty($step1['password'])
          ? Hash::make($step1['password'])
          : Hash::make(Str::random(20));
@@ -139,6 +141,7 @@ class RegisteredUserController extends Controller
 
         // Hapus session registrasi
         $request->session()->forget(['register_step1', 'register_step2']);
+        $request->session()->save();
 
         // Login Otomatis
         Auth::login($user);
