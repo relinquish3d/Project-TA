@@ -514,7 +514,7 @@
                     <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
                         @if($totalRatings > 0)
                             @foreach($ratings as $rating)
-                                <div class="bg-gray-100 border border-gray-300 rounded-2xl p-4 shadow-xs">
+                                <div class="bg-gray-200 border border-gray-300 rounded-2xl p-4 shadow-xs">
                                     <!-- Baris Atas: Info reviewer + tanggal -->
                                     <div class="flex items-center justify-between mb-2">
                                         <div class="flex items-center gap-3">
@@ -559,7 +559,7 @@
                                         </div>
                                     </div>
                                     <!-- Isi ulasan / komentar -->
-                                    <p class="text-sm text-gray-700 bg-gray-200/70 p-3 rounded-xl border border-gray-300/60 leading-relaxed">
+                                    <p class="text-sm text-gray-700 bg-gray-300/70 p-3 rounded-xl border border-gray-300/60 leading-relaxed">
                                         {{ $rating->comment ?: 'Tidak ada ulasan.' }}
                                     </p>
                                 </div>

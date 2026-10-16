@@ -18,29 +18,32 @@ class GoogleController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            // Gunakan stateless() jika sering kena InvalidStateException / Session mismatch
-            $user = Socialite::driver('google')->stateless()->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
+            $findUser = User::where('id_google', $googleUser->id)
+            ->orWhere('email', $googleUser->email)->first();
 
-            $finduser = User::where('id_google', $user->id)->first();
-
-            if ($finduser) {
-                Auth::login($finduser);
-                return redirect()->intended('register/profile'); // Redirect ke halaman create profile setelah login
-            } else {
-                $newUser = User::create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'id_google' => $user->id,
-                    'email_verified_at' => now(), // Gunakan helper now() bawaan Laravel
-                ]);
-
-                Auth::login($newUser);
-                return redirect()->intended('register/profile'); // Redirect ke halaman create profile setelah login
+            if ($findUser) {
+         
+            if (!$findUser->id_google) {
+                $findUser->update(['id_google' => $googleUser->id]);
+                Auth::login($findUser);
+                return redirect()->intended('register/profile');
             }
+                Auth::login($newUser);
+                return redirect()->intended('register/profile');
+                }
 
+                session()->put('register_step1',[
+                    'name' => $googleUser->getName() ?? $googleUser->getNickname(),
+                    'email' => $googleUser->getEmail(),
+                    'id_google' => $googleUser->getId(),
+                    'is_google' => true,
+                ]);
+                return redirect()->route('register.profile-create');
+                
         } catch (Throwable $e) {
-            // Dump objek exception utuh agar detail error/stack trace terlihat jelas
-            dd($e);
+            return redirect()->route('login')
+            ->withErrors(['error' => 'Terjadi Kesalahan Saat Login' . $e->getMessage()]);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\CategoryGame;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -87,7 +89,8 @@ class RegisteredUserController extends Controller
             return redirect()->route('register');
         }
 
-        return view('auth.choose-game');
+        $categories = CategoryGame::all();
+        return view('auth.choose-game', compact('categories'));
     }
 
     /**
@@ -107,19 +110,29 @@ class RegisteredUserController extends Controller
 
        
         $request->validate([
-            'game' => ['required', 'string'],
+            'games' => ['required', 'array', 'min:1'],
+            'games.*' => ['string'],
+        ], [
+            'games.required' => 'Silahkan pilih minimal 1 game!',
+            'games.*.required' => 'Silahkan pilih minimal 1 game!',
         ]);
+
+        //password hash google
+        $password = !empty($step1['password'])
+         ? Hash::make($step1['password'])
+         : Hash::make(Str::random(20));
 
         // Simpan User Baru
         $user = User::create([
             'name'           => $step1['name'],
             'email'          => $step1['email'],
-            'password'       => Hash::make($step1['password']),
+            'id_google'      => $step1['id_google'] ?? null,
+            'email_verified_at' => !empty($step1['id_google']) ? now() : null,
+            'password'       => $password,
             'display_name'   => $step2['display_name'],
             'bio'            => $step2['bio'] ?? null,
             'avatar'         => $step2['avatar'] ?? null,
-           
-            'favorite_games' => [$request->game], 
+            'favorite_games' => $request->games, 
         ]);
 
         event(new Registered($user));

@@ -30,52 +30,39 @@
 
                     {{-- Grid Pilihan Game --}}
                     <div class="grid grid-cols-2 gap-5 mb-8 max-w-md w-full">
-                        
-                        {{-- PUBG --}}
-                        <label class="cursor-pointer group relative">
-                            <input type="radio" name="game" value="PUBG" class="peer hidden" required>
-                            <div class="bg-[#E2E8F0] border-2 border-[#94A3B8] rounded-2xl p-4 flex flex-col items-center justify-center h-48 transition-all peer-checked:border-blue-600 peer-checked:ring-4 peer-checked:ring-blue-500/30 peer-checked:bg-white group-hover:border-blue-400">
-                                <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
-                                    <img class="w-full h-full object-cover" src="{{ asset('images/Game/pubg.png') }}" alt="PUBG Mobile" />  
+                        @forelse ($categories as $cat)
+                            @php
+                                $gameTitle = $cat->game_name;
+                                $image = 'images/Game/valorant.png';
+                                if (stripos($gameTitle, 'PUBG') !== false) {
+                                    $image = 'images/Game/pubg.png';
+                                } elseif (stripos($gameTitle, 'Mobile Legends') !== false || stripos($gameTitle, 'ML') !== false) {
+                                    $image = 'images/Game/ML.png';
+                                } elseif (stripos($gameTitle, 'FC') !== false) {
+                                    $image = 'images/Game/FC.png';
+                                } elseif (stripos($gameTitle, 'Valorant') !== false) {
+                                    $image = 'images/Game/valorant.png';
+                                } elseif (!empty($cat->image)) {
+                                    $image = $cat->image;
+                                }
+                            @endphp
+                            <label class="cursor-pointer group relative">
+                                <input type="checkbox" name="games[]" value="{{ $gameTitle }}" class="peer hidden" {{ in_array($gameTitle, old('games', [])) ? 'checked' : '' }}>
+                                <div class="bg-[#E2E8F0] border-2 border-[#94A3B8] rounded-2xl p-4 flex flex-col items-center justify-center h-48 transition-all peer-checked:border-blue-600 peer-checked:ring-4 peer-checked:ring-blue-500/30 peer-checked:bg-white group-hover:border-blue-400">
+                                    <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
+                                        <img class="w-full h-full object-cover" src="{{ asset($image) }}" alt="{{ $gameTitle }}" />  
+                                    </div>
+                                    <span class="text-base font-bold text-slate-900 text-center leading-tight">{{ $gameTitle }}</span>
                                 </div>
-                                <span class="text-base font-bold text-slate-900">PUBG</span>
-                            </div>
-                        </label>
-
-                        {{-- Valorant --}}
-                        <label class="cursor-pointer group relative">
-                            <input type="radio" name="game" value="Valorant" class="peer hidden">
-                            <div class="bg-[#E2E8F0] border-2 border-[#94A3B8] rounded-2xl p-4 flex flex-col items-center justify-center h-48 transition-all peer-checked:border-blue-600 peer-checked:ring-4 peer-checked:ring-blue-500/30 peer-checked:bg-white group-hover:border-blue-400">
-                                <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
-                                    <img class="w-full h-full object-cover" src="{{ asset('images/Game/valorant.png') }}" alt="Valorant" />
-                                </div>
-                                <span class="text-base font-bold text-slate-900">Valorant</span>
-                            </div>
-                        </label>
-
-                        {{-- Mobile Legends --}}
-                        <label class="cursor-pointer group relative">
-                            <input type="radio" name="game" value="Mobile Legends" class="peer hidden">
-                            <div class="bg-[#E2E8F0] border-2 border-[#94A3B8] rounded-2xl p-4 flex flex-col items-center justify-center h-48 transition-all peer-checked:border-blue-600 peer-checked:ring-4 peer-checked:ring-blue-500/30 peer-checked:bg-white group-hover:border-blue-400">
-                                <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
-                                    <img class="w-full h-full object-cover" src="{{ asset('images/Game/ML.png') }}" alt="Mobile Legends" />
-                                </div>
-                                <span class="text-base font-bold text-slate-900 text-center leading-tight">Mobile Legends</span>
-                            </div>
-                        </label>
-
-                        {{-- FC Mobile --}}
-                        <label class="cursor-pointer group relative">
-                            <input type="radio" name="game" value="FC Mobile" class="peer hidden">
-                            <div class="bg-[#E2E8F0] border-2 border-[#94A3B8] rounded-2xl p-4 flex flex-col items-center justify-center h-48 transition-all peer-checked:border-blue-600 peer-checked:ring-4 peer-checked:ring-blue-500/30 peer-checked:bg-white group-hover:border-blue-400">
-                                <div class="w-28 h-28 rounded-2xl overflow-hidden mb-3">
-                                    <img class="w-full h-full object-cover" src="{{ asset('images/Game/FC.png') }}" alt="FC Mobile" />
-                                </div>
-                                <span class="text-base font-bold text-slate-900">FC Mobile</span>
-                            </div>
-                        </label>
-
+                            </label>
+                        @empty
+                            <p class="col-span-2 text-center text-gray-500">Tidak ada pilihan game yang tersedia.</p>
+                        @endforelse
                     </div>
+                    {{-- Pesan error jika user belum memilih minimal 1 game --}}
+                    @error('games')
+                        <p class="text-red-500 text-sm mb-4">{{ $message }}</p>
+                    @enderror
 
                     {{-- Tombol Next --}}
                     <button type="submit" class="w-48 bg-[#D1D5DB] border-2 border-[#9CA3AF] rounded-full py-2.5 text-base font-extrabold text-slate-900 hover:bg-gray-400 transition-all shadow-sm">
