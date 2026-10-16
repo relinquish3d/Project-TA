@@ -30,7 +30,17 @@
 
                     {{-- Grid Pilihan Game --}}
                     <div class="grid grid-cols-2 gap-5 mb-8 max-w-md w-full">
-                        @forelse ($categories as $cat)
+                        {{-- Logika Cadangan: Jika database kosong, pakai list game default ini --}}
+                        @php
+                            $displayCategories = $categories->isNotEmpty() ? $categories : collect([
+                                (object)['game_name' => 'Valorant', 'image' => 'images/Game/valorant.png'],
+                                (object)['game_name' => 'PUBG Mobile', 'image' => 'images/Game/pubg.png'],
+                                (object)['game_name' => 'Mobile Legends', 'image' => 'images/Game/ML.png'],
+                                (object)['game_name' => 'FC Mobile', 'image' => 'images/Game/FC.png']
+                            ]);
+                        @endphp
+
+                        @foreach ($displayCategories as $cat)
                             @php
                                 $gameTitle = $cat->game_name;
                                 $image = 'images/Game/valorant.png';
@@ -55,10 +65,9 @@
                                     <span class="text-base font-bold text-slate-900 text-center leading-tight">{{ $gameTitle }}</span>
                                 </div>
                             </label>
-                        @empty
-                            <p class="col-span-2 text-center text-gray-500">Tidak ada pilihan game yang tersedia.</p>
-                        @endforelse
+                        @endforeach
                     </div>
+
                     {{-- Pesan error jika user belum memilih minimal 1 game --}}
                     @error('games')
                         <p class="text-red-500 text-sm mb-4">{{ $message }}</p>
