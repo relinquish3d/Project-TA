@@ -68,6 +68,20 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            if (str_starts_with($this->avatar, 'http://') || str_starts_with($this->avatar, 'https://')) {
+                return $this->avatar;
+            }
+            if (str_starts_with($this->avatar, 'avatars/') || str_starts_with($this->avatar, 'avatars_temp/')) {
+                return asset('storage/' . $this->avatar);
+            }
+            return asset('storage/users-avatar/' . $this->avatar);
+        }
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=C4C4C4&color=000000';
+    }
+
     /* --- RELASI INVITE --- */
     public function sentInvite()
     {
@@ -95,17 +109,23 @@ class User extends Authenticatable
     }
 
     /* --- RELASI CHAT / MESSAGE --- */
+    public function lastMessageWith($authId)
+    {
+        return Message::where(function ($q) use ($authId) {
+            $q->where('sender_id', $this->id)->where('receiver_id', $authId);
+        })->orWhere(function ($q) use ($authId) {
+            $q->where('sender_id', $authId)->where('receiver_id', $this->id);
+        })->latest()->first();
+    }
+
     public function messages()
     {
-        return $this->hasMany(Message::class, 'sender_id', 'id_user');
+        return $this->hasMany(Message::class, 'sender_id', 'id');
     }
 
     public function last_message()
     {
-        // DIBAIKI: Menggunakan $this->id_user (bukan $this->id)
-        return $this->hasOne(Message::class, 'sender_id', 'id_user')
-                    ->orWhere('receiver_id', $this->id_user)
-                    ->latestOfMany();
+        return $this->hasOne(Message::class, 'sender_id', 'id')->latestOfMany();
     }
 
     public function sentMessages()

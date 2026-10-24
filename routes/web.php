@@ -31,8 +31,9 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::get('/chat/{id?}', [ChatController::class, 'show'])->name('chat.show');
+    Route::get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{id}', [ChatController::class, 'send'])->name('chat.send');
+    Route::post('/chat/{id}/typing', [ChatController::class, 'typing'])->name('chat.typing');
 });
 Route::middleware('web')->group(function () {
     Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
