@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <nav class="w-full fixed top-0 z-50 flex flex-row h-16 px-7 bg-[#D9D9D9] border-b border-gray-300 items-center justify-between shadow-xs">
+    <nav class="w-full fixed top-0 z-50 flex flex-row h-16 px-19 bg-[#D9D9D9] border-b border-gray-300 items-center justify-between shadow-xs">
 
         <!-- Logo & Brand -->
         <div class="flex items-center gap-3">
@@ -74,7 +74,11 @@
                     <circle cx="11" cy="11" r="8" />
                 </svg>
             </span>
-            <input type="text" class="w-64 rounded-full pl-10 pr-4 py-1.5 text-sm bg-transparent border border-gray-400 text-black placeholder-gray-500 focus:outline-none focus:border-black" placeholder="Cari User...">
+            <input type="text" id="searchInput" class="w-64 rounded-full pl-10 pr-4 py-1.5 text-sm bg-transparent border border-gray-400 text-black placeholder-gray-500 focus:outline-none focus:border-black" placeholder="Cari User...">
+            <!-- Kotak Dropdown Hasil Pencarian -->
+            <div id="searchDropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto">
+            <!-- Hasil AJAX akan muncul di sini -->
+            </div>
         </div>
 
         <!-- ========== AVATAR BUTTON ========== -->
@@ -282,9 +286,63 @@
     </main>
     <!-- ================= JAVASCRIPT ================= -->
     <script>
-        // Aktifkan ikon Lucide
-        lucide.createIcons();
+      lucide.createIcons();
 
+    const searchInput = document.getElementById('searchInput');
+    const searchDropdown = document.getElementById('searchDropdown');
+    let searchTimeout;
+
+    if (searchInput && searchDropdown) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+
+            if (query.length === 0) {
+                searchDropdown.classList.add('hidden');
+                searchDropdown.innerHTML = '';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                const url = `{{ route('users.search') }}?q=${encodeURIComponent(query)}`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchDropdown.innerHTML = '';
+
+                        if (data.length === 0) {
+                            searchDropdown.innerHTML = `<div class="p-4 text-center text-sm text-gray-500 italic">User tidak ditemukan</div>`;
+                        } else {
+                            data.forEach(user => {
+                                const item = `
+                                    <a href="${user.url}" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition border-b border-gray-100 last:border-none">
+                                        <img src="${user.avatar}" alt="${user.name}" class="w-9 h-9 rounded-full object-cover border border-gray-300 flex-shrink-0">
+                                        <div class="overflow-hidden">
+                                            <h4 class="text-sm font-bold text-gray-900 truncate">${user.name}</h4>
+                                            <!-- Diubah dari Skill menjadi ID User -->
+                                            <p class="text-xs text-gray-500">ID: <span class="text-gray-700">${user.id}</span></p>
+                                        </div>
+                                    </a>
+                                `;
+                                searchDropdown.innerHTML += item;
+                            });
+                        }
+                        searchDropdown.classList.remove('hidden');
+                    })
+                    .catch(err => console.error('Error searching users:', err));
+            }, 300);
+        });
+
+        // Tutup dropdown jika mengklik di luar area input pencarian
+        window.addEventListener('click', function(e) {
+            if (searchInput && searchDropdown) {
+                if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.classList.add('hidden');
+                }
+            }
+        });
+    }
 
         // Fungsi buka/tutup dropdown
         function toggleMenu(event) {

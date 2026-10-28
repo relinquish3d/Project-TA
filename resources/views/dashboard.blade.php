@@ -405,7 +405,7 @@
                         @auth
                         <li><a href="{{ route('profile.edit') }}" class="hover:text-black transition-colors">Profile</a></li>
                         @else
-                        <li><a href="{{ route('register') }}" class="hover:text-black transition-colors">Sign in</a></li>
+                        <li><a href="{{ route('register') }}" class="hover:text-black transition-colors">Sign Up</a></li>
                         <li><a href="{{ route('login') }}" class="hover:text-black transition-colors">Login</a></li>
                         @endauth
                     </ul>

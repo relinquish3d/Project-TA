@@ -23,23 +23,27 @@ class GoogleController extends Controller
             ->orWhere('email', $googleUser->email)->first();
 
             if ($findUser) {
-         
-            if (!$findUser->id_google) {
-                $findUser->update(['id_google' => $googleUser->id]);
-                Auth::login($findUser);
-                return redirect()->intended('register/profile');
-            }
-                Auth::login($newUser);
-                return redirect()->intended('register/profile');
+                if (!$findUser->id_google) {
+                    $findUser->update(['id_google' => $googleUser->id]);
                 }
 
-                session()->put('register_step1',[
-                    'name' => $googleUser->getName() ?? $googleUser->getNickname(),
-                    'email' => $googleUser->getEmail(),
-                    'id_google' => $googleUser->getId(),
-                    'is_google' => true,
-                ]);
-                return redirect()->route('register.profile-create');
+                Auth::login($findUser);
+                request()->session()->regenerate();
+
+                if ($findUser->role === 'admin') {
+                    return redirect()->route('admin.dashboard');
+                }
+
+                return redirect()->route('dashboard');
+            }
+
+            session()->put('register_step1',[
+                'name' => $googleUser->getName() ?? $googleUser->getNickname(),
+                'email' => $googleUser->getEmail(),
+                'id_google' => $googleUser->getId(),
+                'is_google' => true,
+            ]);
+            return redirect()->route('register.profile-create');
                 
         } catch (Throwable $e) {
             return redirect()->route('login')
