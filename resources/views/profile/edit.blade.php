@@ -229,7 +229,7 @@
                         <span class="text-xs font-semibold text-gray-500">Bukti Lampiran:</span>
                         <a href="{{ asset('storage/' . $report->attachment) }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 hover:underline bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
                             <i data-lucide="image" class="w-3.5 h-3.5"></i>
-                            Lihat Gambar Lampiran
+                            Lihat Gambar Lampiran 
                         </a>
                     </div>
                     @endif
@@ -394,7 +394,7 @@
                                     <div class="swiper-slide flex flex-col items-center justify-center group">
                                         <div class="relative p-2 cursor-pointer transition-transform duration-300 group-hover:-translate-y-2">
                                             <!-- Efek Glow -->
-                                            <div class="absolute inset-0 bg-red-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                            <div class="absolute inset-0 bg-blue-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                                             <!-- Logo Container -->
                                             <div class="relative w-40 h-40 flex items-center justify-center p-2 rounded-3xl bg-white/40 backdrop-blur-md border border-white/60 shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">

@@ -884,18 +884,6 @@
             }
         }
 
-        // =============================================
-        // INTERAKTIF STAR RATING
-        // Mendukung half-star (setengah bintang):
-        //   - Klik SISI KIRI bintang  = nilai setengah (contoh: bintang ke-3 kiri = 2.5)
-        //   - Klik SISI KANAN bintang = nilai penuh   (contoh: bintang ke-3 kanan = 3.0)
-        //
-        // Cara kerja:
-        //   1. Setiap bintang punya data-star (1-5)
-        //   2. Saat diklik, cek posisi klik (kiri/kanan dari tengah bintang)
-        //   3. Update hidden input "stars" + tampilan visual
-        // =============================================
-        let currentRating = {{ $existingRating ? $existingRating->stars : 0 }};
 
         document.querySelectorAll('.star-container').forEach(container => {
             // Event: klik bintang untuk set rating

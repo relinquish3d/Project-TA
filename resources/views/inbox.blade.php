@@ -146,7 +146,7 @@
             </button>
         </div>
 
-        <!-- Ticket Cards Container -->
+        <!-- Ticket Cards -->
         <div class="space-y-4" id="ticketsContainer">
             @forelse($reports as $report)
                 <div class="ticket-item bg-white border border-gray-200 rounded-2xl p-5 shadow-xs hover:shadow-md transition" data-status="{{ $report->status }}">
