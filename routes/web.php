@@ -31,8 +31,9 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::get('/chat/{id?}', [ChatController::class, 'show'])->name('chat.show');
+    Route::get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{id}', [ChatController::class, 'send'])->name('chat.send');
+    Route::post('/chat/{id}/typing', [ChatController::class, 'typing'])->name('chat.typing');
 });
 Route::middleware('web')->group(function () {
     Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
@@ -115,42 +116,6 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-
-// Route::get('/api/search-users', function (Request $request) {
-
-//     $query = $request->get('q');
-
-//     if (!$query) {
-//         return response()->json([]);
-//     }
-
-//     $userId = Auth::id();
-
-//     $users = User::where('name', 'LIKE', '%' . $query . '%')
-//         ->when($userId, function ($q) use ($userId) {
-//             $q->where('id', '!=', $userId);
-//         })
-//         ->limit(5)
-//         ->get();
-
-//     return response()->json(
-//         $users->map(function ($user) {
-
-//             return [
-//                 'id' => $user->id,
-//                 'name' => $user->name,
-
-//                 'avatar' => $user->avatar
-//                     ? asset('storage/' . $user->avatar)
-//                     : asset('images/default-avatar.png'),
-
-//                 'url' => route('profile.show', $user->id),
-//             ];
-
-//         })
-//     );
-
-// })->name('api.users.search');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

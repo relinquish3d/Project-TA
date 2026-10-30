@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoryGame extends Model
 {
- protected $table = 'Category_game';
+    protected $table = 'categories_game';
+    protected $primaryKey = 'id_category_game';
 
- protected $fillable = [
-    'game_name',
-    'image',
- ];
+    protected $fillable = [
+        'game_name',
+        'image',
+    ];
 }
