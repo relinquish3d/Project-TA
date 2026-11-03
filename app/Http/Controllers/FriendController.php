@@ -32,14 +32,12 @@ class FriendController extends Controller
             });
 
         // Daftar User yang belum di-add (rekomendasi teman)
-        $usersToRecommend = User::where('id', '!=', $userId)
-            ->whereNotIn('id', function ($query) use ($userId) {
-                $query->select('receiver_id')->from('invite')->where('sender_id', $userId)
-                    ->union(
-                        $query->select('sender_id')->from('invite')->where('receiver_id', $userId)
-                    );
-            })
-            ->get();
+        $invitedUserIds = Invite::where('sender_id', $userId)->pluck('receiver_id')
+            ->merge(Invite::where('receiver_id', $userId)->pluck('sender_id'))
+            ->unique()
+            ->push($userId);
+
+        $usersToRecommend = User::whereNotIn('id', $invitedUserIds)->get();
 
         return view('friends.index', compact('incomingRequests', 'friends', 'usersToRecommend'));
     }
@@ -59,7 +57,9 @@ class FriendController extends Controller
     // Terima Permintaan Pertemanan
     public function acceptFriend($id)
     {
-        $request = Invite::where('id', $id)
+        $request = Invite::where(function ($q) use ($id) {
+                $q->where('id_invite', $id);
+            })
             ->where('receiver_id', Auth::id())
             ->firstOrFail();
 
@@ -75,7 +75,7 @@ class FriendController extends Controller
             $q->where('sender_id', Auth::id())->where('receiver_id', $id);
         })->orWhere(function ($q) use ($id) {
             $q->where('sender_id', $id)->where('receiver_id', Auth::id());
-        })->orWhere('id', $id)->first();
+        })->orWhere('id_invite', $id)->first();
 
         if ($friendship) {
             $friendship->delete();

@@ -10,6 +10,7 @@ class Invite extends Model
     use HasFactory;
 
     protected $table = 'invite';
+    protected $primaryKey = 'id_invite';
 
     protected $fillable = ['sender_id', 'receiver_id', 'status'];
 

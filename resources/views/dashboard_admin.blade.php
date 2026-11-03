@@ -1,441 +1,531 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Telah Datang</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Dashboard Admin - PlayAll</title>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
-<body>
-    <nav class="w-full fixed top-0 z-50 flex flex-row h-16 px-19 bg-[#D9D9D9] border-b border-gray-300 items-center justify-between shadow-xs">
+<body class="bg-gray-100 text-gray-900 antialiased">
 
-        <!-- Logo & Brand -->
-        <div class="flex items-center gap-3">
-            <button id="sidebarButton" type="button" class="flex items-center gap-3 focus:outline-none" aria-label="Buka sidebar">
-                <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-9 h-9 object-contain">
-                <span class="text-xl font-bold tracking-tight text-black">
-                    PlayAll
-                </span>
+    <!-- Loading Screen -->
+    <div id="pageLoader"
+        class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white transition-opacity duration-300">
+        <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="h-14 w-14 animate-pulse object-contain">
+        <h2 class="mt-3 text-xl font-bold">PlayAll</h2>
+        <p class="mt-2 text-sm text-gray-500">Memuat dashboard...</p>
+        <div class="mt-5 h-7 w-7 animate-spin rounded-full border-4 border-gray-200 border-t-black"></div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 z-40 hidden bg-black/40"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col border-r border-gray-200 bg-white transition-transform duration-300">
+
+        <div class="flex h-16 items-center justify-between border-b border-gray-200 px-5">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="h-9 w-9 object-contain">
+                <span class="text-xl font-bold">PlayAll</span>
+            </div>
+
+            <button id="closeSidebarButton" type="button" aria-label="Tutup sidebar"
+                class="rounded-lg p-2 hover:bg-gray-100">
+                <i data-lucide="x" class="h-5 w-5"></i>
             </button>
-
-            <!--overlay sidebar-->
-            <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
-
-            <!-- Sidebar -->
-            <aside id="sidebar" class="fixed top-0 left-0 z-50 w-64 h-screen bg-white shadow-xl transfrom -translate-x-full transition-transfrom duration-300 ease-in-out">
-
-                <!--header sidebar-->
-                <div class="flex items-center justify-between p-5 bg-[#D9D9D9] border-b border-gray-200 shadow-xs">
-                    <div class="flex items-center gap-3">
-                        <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-9 h-9 object-contain">
-                        <span class="text-xl font-bold tracking-tight text-black">
-                            PlayAll
-                        </span>
-                    </div>
-                    <button id="closeSidebarButton" type="button" class="text-gray-600 hover:text-gray-800 focus:outline-none" aria-label="Tutup sidebar">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-                <!--menu sidebar-->
-                <nav class="p-5">
-                    <ul class="space-y-2">
-                        <li>
-                            <a href="#adminReportsSection" class="flex items-center gap-3 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-lg transition">
-                                <i data-lucide="inbox" class="w-4 h-4 text-blue-600"></i>
-                                Tiket Laporan
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/') }}" class="flex items-center gap-3 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-lg transition">
-                                <i data-lucide="home" class="w-4 h-4 text-gray-600"></i>
-                                Home
-                            </a>
-                        </li>
-                    </ul>
-                    
-                </nav>
-            </aside>
         </div>
 
-        <!-- Navigation Links -->
-        <div class="flex items-center gap-8">
-            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite"></a>
-            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ url('/') }}"></a>
-        </div>
 
-                <!-- Search Bar -->
-        <div class="relative flex items-center print:hidden gap-3 ml-220 "> 
-            <span class="absolute left-3.5 text-gray-500 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
-                    <path d="m21 21-4.34-4.34" />
-                    <circle cx="11" cy="11" r="8" />
-                </svg>
-            </span>
-            <input type="text" id="searchInput" class="w-64 rounded-full pl-10 pr-4 py-1.5 text-sm bg-transparent border border-gray-400 text-black placeholder-gray-500 focus:outline-none focus:border-black" placeholder="Cari User...">
-            <!-- Kotak Dropdown Hasil Pencarian -->
-            <div id="searchDropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto">
-            <!-- Hasil AJAX akan muncul di sini -->
-            </div>
-        </div>
+        <nav class="flex-1 space-y-1 overflow-y-auto p-4">
 
-        <!-- ========== AVATAR BUTTON ========== -->
-        <button
-            id="menuButton"
-            type="button"
-            onclick="toggleMenu(event)"
-            aria-label="Buka menu profil"
-            aria-expanded="false"
-            class="group flex items-center gap-2 rounded-full outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+            <p class="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Menu Utama
+            </p>
 
-            @if(Auth::user()->avatar)
-
-            <!-- Avatar dari database -->
-            <img
-                src="{{ asset('storage/' . Auth::user()->avatar) }}"
-                alt="{{ Auth::user()->name }}"
-                class="h-10 w-5 rounded-full border-2 border-gray-400 object-cover shadow-sm transition group-hover:border-black">
-
-            @else
-
-            <!-- Avatar default -->
-            <div
-                class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-500 bg-gray-400 text-sm font-bold text-white shadow-sm transition group-hover:border-black">
-
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-
-            </div>
-
-            @endif
-
-            <!-- Ikon panah dropdown -->
-            <i
-                data-lucide="chevron-down"
-                class="h-4 w-4 text-gray-700 transition-transform duration-200"
-                id="chevronIcon">
-            </i>
-
-        </button>
-
-
-        <!-- ========== DROPDOWN MENU ========== -->
-        <div
-            id="dropdownMenu"
-            class="absolute right-0 top-14 hidden w-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl">
-
-            <!-- User Information -->
-            <div class="border-b border-gray-200 px-4 py-3">
-
-                <p class="truncate text-sm font-semibold text-gray-800">
-                    {{ Auth::user()->name }}
-                </p>
-
-                <p class="truncate text-xs text-gray-500">
-                    {{ Auth::user()->email }}
-                </p>
-
-            </div>
-
-            <!-- Menu Link: Manajemen Tiket Laporan -->
-            <a href="#adminReportsSection" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition">
-                <i data-lucide="inbox" class="w-4 h-4 text-blue-600"></i>
-                <span>Tiket Laporan</span>
+            <!-- Dashboard -->
+            <a href="{{ route('admin.dashboard') }}"
+                class="flex items-center gap-3 rounded-lg bg-gray-200 px-3 py-2.5 text-sm font-semibold text-gray-900">
+                <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
+                Dashboard
             </a>
 
-            <div class="border-t border-gray-200 my-1"></div>
+            <!-- Tiket Laporan -->
+            <a href="{{ route('inbox') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">
+                <i data-lucide="ticket" class="h-5 w-5"></i>
+                Tiket Laporan
+            </a>
 
-            <!-- Opsi Logout -->
-            <form method="POST" action="{{ route('logout') }}" class="m-0">
+            <!-- Kelola Admin -->
+            <a href="{{ route('admin.users.index') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">
+                <i data-lucide="users" class="h-5 w-5"></i>
+                Kelola Admin
+            </a>
+
+            <!-- Kategori Game -->
+            <a href="{{ route('admin.categories.index') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">
+                <i data-lucide="tags" class="h-5 w-5"></i>
+                Kategori Game
+            </a>
+
+            <div class="my-4 border-t border-gray-200"></div>
+
+            <p class="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                Pengaturan
+            </p>
+
+            <!-- Profil -->
+            <a href="{{ route('profile.edit') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">
+                <i data-lucide="user-round" class="h-5 w-5"></i>
+                Profil Saya
+            </a>
+
+            <!-- Kembali ke Website -->
+            <a href="{{ url('/') }}"
+                class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">
+                <i data-lucide="house" class="h-5 w-5"></i>
+                Kembali ke Website
+            </a>
+
+            <!-- Logout -->
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
+
                 <button type="submit"
-                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition">
-                    <i data-lucide="log-out" class="w-4 h-4 text-red-600"></i>
-                    <span>Logout</span>
+                    class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-gray-900">
+                    <i data-lucide="log-out" class="h-5 w-5"></i>
+                    Logout
                 </button>
             </form>
-        </div>
-        </div>
-        </div>
-    </nav>
 
-    <!-- Main Admin Content -->
-    <main class="max-w-7xl mx-auto px-6 pt-24 pb-12" id="adminReportsSection">
-        <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Dashboard Admin</h1>
-                <p class="text-sm text-gray-600 mt-1">Selamat datang kembali, <strong>{{ auth()->user()->name }}</strong>. Kelola tiket laporan masalah akun pengguna di sini.</p>
-            </div>
+        </nav>
 
-            <div class="flex items-center gap-3">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-300 text-xs font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                    {{ $reports->where('status', 'in_progress')->count() }} Sedang Diproses
-                </span>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    {{ $reports->where('status', 'completed')->count() }} Selesai
-                </span>
-            </div>
+
+        <div class="border-t border-gray-200 p-4 text-xs text-gray-400">
+            PlayAll Admin Panel
+        </div>
+    </aside>
+
+    <!-- Navbar -->
+    <header
+        class="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-6">
+
+        <div class="flex items-center gap-3">
+            <button id="sidebarButton" type="button" aria-label="Buka sidebar"
+                class="rounded-lg p-2 hover:bg-gray-100">
+                <i data-lucide="menu" class="h-5 w-5"></i>
+            </button>
+            <span class="hidden text-sm font-semibold text-gray-500 sm:block">
+                Admin Panel
+            </span>
         </div>
 
-        @if(session('success'))
-        <div class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-xl flex items-center justify-between shadow-xs">
-            <div class="flex items-center gap-2">
-                <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
-                <span>{{ session('success') }}</span>
+        <!-- Search User -->
+        <div class="relative mx-3 hidden w-full max-w-sm md:block">
+            <i data-lucide="search" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"></i>
+
+            <input id="searchInput" type="text" autocomplete="off" placeholder="Cari user..."
+                class="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-3 text-sm outline-none focus:border-gray-400 focus:bg-white">
+
+            <div id="searchDropdown"
+                class="absolute left-0 right-0 top-full z-50 mt-2 hidden max-h-72 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
             </div>
-            <button onclick="this.parentElement.remove()" class="font-bold text-lg hover:text-green-900">&times;</button>
         </div>
+
+        <!-- Admin Profile -->
+        <div class="relative">
+            <button id="menuButton" type="button" aria-expanded="false"
+                class="flex items-center gap-2 rounded-lg p-1.5 hover:bg-gray-100">
+
+                @if (Auth::user()->avatar)
+                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Avatar"
+                        class="h-9 w-9 rounded-full border border-gray-200 object-cover">
+                @else
+                    <div
+                        class="flex h-9 w-9 items-center justify-center rounded-full bg-gray-800 text-sm font-semibold text-white">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                @endif
+
+                <div class="hidden text-left sm:block">
+                    <p class="max-w-32 truncate text-sm font-semibold">
+                        {{ Auth::user()->name }}
+                    </p>
+                    <p class="text-xs text-gray-500">Administrator</p>
+                </div>
+
+                <i data-lucide="chevron-down" id="chevronIcon" class="hidden h-4 w-4 sm:block"></i>
+            </button>
+
+            <div id="dropdownMenu"
+                class="absolute right-0 top-12 z-50 hidden w-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+
+                <div class="border-b border-gray-200 px-4 py-3">
+                    <p class="truncate text-sm font-semibold">{{ Auth::user()->name }}</p>
+                    <p class="truncate text-xs text-gray-500">{{ Auth::user()->email }}</p>
+                </div>
+
+                <a href="{{ url('/profile') }}" class="flex items-center gap-3 px-4 py-3 text-sm hover:bg-gray-100">
+                    <i data-lucide="user-round" class="h-4 w-4"></i>
+                    Profil Saya
+                </a>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="flex w-full items-center gap-3 border-t border-gray-200 px-4 py-3 text-sm hover:bg-gray-100">
+                        <i data-lucide="log-out" class="h-4 w-4"></i>
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main id="dashboard" class="mx-auto max-w-7xl px-4 pb-12 pt-24 sm:px-6 lg:px-8">
+
+        <!-- Heading -->
+        <section class="mb-8">
+            <p class="mb-1 text-sm text-gray-500">Ringkasan aktivitas</p>
+            <h1 class="text-2xl font-bold sm:text-3xl">Dashboard Admin</h1>
+            <p class="mt-2 text-sm text-gray-500">
+                Selamat datang kembali, {{ Auth::user()->name }}.
+                Berikut ringkasan website PlayAll.
+            </p>
+        </section>
+
+        @if (session('success'))
+            <div class="mb-6 flex items-center gap-2 rounded-lg border border-gray-300 bg-white p-4 text-sm">
+                <i data-lucide="check-circle" class="h-5 w-5"></i>
+                {{ session('success') }}
+            </div>
         @endif
 
-        <!-- Laporan Table / Card Section -->
-        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
-            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="inbox" class="w-5 h-5 text-blue-600"></i>
-                    <h2 class="text-base font-bold text-gray-800">Daftar Tiket Laporan User</h2>
+        <!-- Statistik -->
+        <section class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-500">Total User</p>
+                    <i data-lucide="users" class="h-5 w-5 text-gray-500"></i>
                 </div>
-                <span class="text-xs text-gray-500">Total: {{ $reports->count() }} tiket</span>
+                <p class="mt-3 text-3xl font-bold">{{ $totalUsers }}</p>
+                <p class="mt-1 text-xs text-gray-400">Akun terdaftar</p>
             </div>
 
-            <div class="divide-y divide-gray-100 overflow-x-auto">
-                @forelse($reports as $report)
-                <div class="p-6 hover:bg-gray-50/50 transition">
-                    <div class="flex flex-wrap items-start justify-between gap-4 mb-3">
-                        <div class="space-y-1">
-                            <div class="flex items-center gap-2.5">
-                                <span class="px-2.5 py-1 text-xs font-mono font-bold bg-gray-100 border border-gray-300 rounded-lg text-gray-800">
-                                    {{ $report->ticket_code }}
-                                </span>
-                                <span class="px-2.5 py-1 text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-lg">
-                                    {{ $report->category_label }}
-                                </span>
-                                <span class="text-xs text-gray-400">
-                                    {{ $report->created_at ? $report->created_at->format('d M Y, H:i') : '-' }}
-                                </span>
+            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-500">Total Tiket</p>
+                    <i data-lucide="ticket" class="h-5 w-5 text-gray-500"></i>
+                </div>
+                <p class="mt-3 text-3xl font-bold">{{ $reportStats['total'] }}</p>
+                <p class="mt-1 text-xs text-gray-400">Semua laporan</p>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-500">Sedang Diproses</p>
+                    <i data-lucide="clock-3" class="h-5 w-5 text-gray-500"></i>
+                </div>
+                <p class="mt-3 text-3xl font-bold">{{ $reportStats['in_progress'] }}</p>
+                <p class="mt-1 text-xs text-gray-400">Menunggu penyelesaian</p>
+            </div>
+
+            <div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-gray-500">Selesai</p>
+                    <i data-lucide="check-circle-2" class="h-5 w-5 text-gray-500"></i>
+                </div>
+                <p class="mt-3 text-3xl font-bold">{{ $reportStats['completed'] }}</p>
+                <p class="mt-1 text-xs text-gray-400">Laporan ditangani</p>
+            </div>
+
+        </section>
+
+        <!-- Tiket Terbaru -->
+        <section id="reports" class="mb-8 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+
+            <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4 sm:px-6">
+                <div>
+                    <h2 class="font-bold">Tiket Laporan Terbaru</h2>
+                    <p class="mt-1 text-xs text-gray-500">
+                        Laporan yang masuk ke PlayAll.
+                    </p>
+                </div>
+
+                <!-- Ganti dengan URL halaman tiket admin jika tersedia -->
+                <a href="{{ url('/admin/reports') }}"
+                    class="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-black">
+                    Lihat semua
+                    <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
+                </a>
+            </div>
+
+            <div class="divide-y divide-gray-100">
+                @forelse($reports->sortByDesc('created_at')->take(5) as $report)
+                    <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4 sm:px-6">
+
+                        <div class="flex min-w-0 items-start gap-3">
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100">
+                                <i data-lucide="file-text" class="h-5 w-5 text-gray-600"></i>
                             </div>
-                            <p class="text-xs text-gray-600">
-                                Pelapor: <strong class="text-gray-800">{{ $report->user->name ?? 'User #' . $report->user_id }}</strong> ({{ $report->user->email ?? '-' }})
-                            </p>
+
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-semibold">
+                                    {{ $report->ticket_code }}
+                                </p>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    {{ $report->user->name ?? 'User #' . $report->user_id }}
+                                    · {{ $report->category_label }}
+                                </p>
+                                <p class="mt-1 text-xs text-gray-400">
+                                    {{ $report->created_at?->format('d M Y, H:i') ?? '-' }}
+                                </p>
+                            </div>
                         </div>
 
-                        <!-- Status Badge -->
-                        <div>
-                            @if($report->status === 'completed')
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
-                                Selesai
-                            </span>
-                            @else
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
-                                <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-600 animate-pulse"></i>
-                                Sedang Diproses
-                            </span>
-                            @endif
-                        </div>
+                        <span class="rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600">
+                            {{ $report->status === 'completed' ? 'Selesai' : 'Sedang Diproses' }}
+                        </span>
                     </div>
-
-                    <!-- Deskripsi Laporan -->
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 mb-4 text-sm text-gray-800 leading-relaxed whitespace-pre-line">
-                        {{ $report->description }}
-                    </div>
-
-                    @if($report->attachment)
-                    <div class="mb-4 flex items-center gap-2">
-                        <span class="text-xs font-semibold text-gray-500">Bukti:</span>
-                        <a href="{{ asset('storage/' . $report->attachment) }}" target="_blank" class="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">
-                            <i data-lucide="image" class="w-3.5 h-3.5"></i>
-                            Lihat Lampiran Gambar
-                        </a>
-                    </div>
-                    @endif
-
-                    <!-- Form Update Status Admin -->
-                    <form method="POST" action="{{ route('admin.reports.status', $report->id) }}" class="bg-gray-100/70 p-4 rounded-xl border border-gray-200 flex flex-wrap items-end gap-3">
-                        @csrf
-                        @method('PATCH')
-
-                        <div class="w-full sm:w-48">
-                            <label class="block text-xs font-bold text-gray-700 mb-1">Ubah Status</label>
-                            <select name="status" class="w-full px-3 py-1.5 text-xs rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-black">
-                                <option value="in_progress" {{ $report->status === 'in_progress' ? 'selected' : '' }}>Sedang Diproses (In Progress)</option>
-                                <option value="completed" {{ $report->status === 'completed' ? 'selected' : '' }}>Selesai (Completed)</option>
-                            </select>
-                        </div>
-
-                        <div class="flex-1 min-w-[200px]">
-                            <label class="block text-xs font-bold text-gray-700 mb-1">Catatan / Tanggapan Admin untuk Pengguna</label>
-                            <input type="text" name="admin_notes" value="{{ $report->admin_notes }}" placeholder="Tuliskan keterangan penyelesaian laporan..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-black">
-                        </div>
-
-                        <button type="submit" class="px-4 py-1.5 text-xs font-semibold text-white bg-black hover:bg-gray-800 rounded-lg shadow-xs transition flex items-center gap-1.5">
-                            <i data-lucide="save" class="w-3.5 h-3.5"></i>
-                            Perbarui Tiket
-                        </button>
-                    </form>
-                </div>
                 @empty
-                <div class="p-12 text-center text-gray-500 text-sm">
-                    Belum ada tiket laporan yang masuk dari pengguna.
-                </div>
+                    <div class="px-5 py-12 text-center">
+                        <i data-lucide="inbox" class="mx-auto h-8 w-8 text-gray-400"></i>
+                        <p class="mt-3 text-sm font-medium">Belum ada laporan</p>
+                        <p class="mt-1 text-xs text-gray-500">
+                            Laporan terbaru akan muncul di sini.
+                        </p>
+                    </div>
                 @endforelse
             </div>
-        </div>
+        </section>
+
+        <!-- Pengguna Terbaru -->
+        <section id="users" class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+
+            <div class="border-b border-gray-200 px-5 py-4 sm:px-6">
+                <h2 class="font-bold">Pengguna Terbaru</h2>
+                <p class="mt-1 text-xs text-gray-500">
+                    Lima akun terakhir yang terdaftar.
+                </p>
+            </div>
+
+            <div class="divide-y divide-gray-100">
+                @forelse($latestUsers as $user)
+                    <div class="flex items-center gap-3 px-5 py-4 sm:px-6">
+
+                        @if ($user->avatar)
+                            <img src="{{ asset('storage/' . $user->avatar) }}" alt=""
+                                class="h-10 w-10 rounded-full border border-gray-200 object-cover">
+                        @else
+                            <div
+                                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 font-semibold text-gray-700">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </div>
+                        @endif
+
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-semibold">{{ $user->name }}</p>
+                            <p class="truncate text-xs text-gray-500">{{ $user->email }}</p>
+                        </div>
+
+                        <div class="hidden text-right sm:block">
+                            <p class="text-xs text-gray-400">Bergabung</p>
+                            <p class="mt-1 text-xs text-gray-600">
+                                {{ $user->created_at?->format('d M Y') ?? '-' }}
+                            </p>
+                        </div>
+                    </div>
+                @empty
+                    <p class="p-8 text-center text-sm text-gray-500">
+                        Belum ada pengguna.
+                    </p>
+                @endforelse
+            </div>
+        </section>
+
+        <footer class="mt-8 text-center text-xs text-gray-400">
+            &copy; {{ date('Y') }} PlayAll
+        </footer>
+
     </main>
-    <!-- ================= JAVASCRIPT ================= -->
+
     <script>
-      lucide.createIcons();
+        lucide.createIcons();
 
-    const searchInput = document.getElementById('searchInput');
-    const searchDropdown = document.getElementById('searchDropdown');
-    let searchTimeout;
+        // Loading halaman
+        const pageLoader = document.getElementById('pageLoader');
 
-    if (searchInput && searchDropdown) {
+        window.addEventListener('load', function() {
+            pageLoader.classList.add('opacity-0', 'pointer-events-none');
+
+            setTimeout(function() {
+                pageLoader.classList.add('hidden');
+            }, 300);
+        });
+
+        // Sidebar
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const sidebarButton = document.getElementById('sidebarButton');
+        const closeButton = document.getElementById('closeSidebarButton');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        sidebarButton.addEventListener('click', openSidebar);
+        closeButton.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        // Dropdown profil
+        const menuButton = document.getElementById('menuButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const chevronIcon = document.getElementById('chevronIcon');
+
+        menuButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+
+            dropdownMenu.classList.toggle('hidden');
+
+            const isOpen = !dropdownMenu.classList.contains('hidden');
+            menuButton.setAttribute('aria-expanded', String(isOpen));
+            chevronIcon.classList.toggle('rotate-180', isOpen);
+        });
+
+        document.addEventListener('click', function(event) {
+            if (
+                !dropdownMenu.contains(event.target) &&
+                !menuButton.contains(event.target)
+            ) {
+                dropdownMenu.classList.add('hidden');
+                menuButton.setAttribute('aria-expanded', 'false');
+                chevronIcon.classList.remove('rotate-180');
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeSidebar();
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+
+        // Pencarian user AJAX
+        const searchInput = document.getElementById('searchInput');
+        const searchDropdown = document.getElementById('searchDropdown');
+        let searchTimeout;
+        let searchController;
+
         searchInput.addEventListener('input', function() {
             clearTimeout(searchTimeout);
+
+            if (searchController) {
+                searchController.abort();
+            }
+
             const query = this.value.trim();
 
-            if (query.length === 0) {
+            if (!query) {
                 searchDropdown.classList.add('hidden');
                 searchDropdown.innerHTML = '';
                 return;
             }
 
-            searchTimeout = setTimeout(() => {
-                const url = `{{ route('users.search') }}?q=${encodeURIComponent(query)}`;
+            searchTimeout = setTimeout(async function() {
+                searchController = new AbortController();
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        searchDropdown.innerHTML = '';
+                searchDropdown.innerHTML =
+                    '<p class="p-4 text-sm text-gray-500">Mencari user...</p>';
+                searchDropdown.classList.remove('hidden');
 
-                        if (data.length === 0) {
-                            searchDropdown.innerHTML = `<div class="p-4 text-center text-sm text-gray-500 italic">User tidak ditemukan</div>`;
-                        } else {
-                            data.forEach(user => {
-                                const item = `
-                                    <a href="${user.url}" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition border-b border-gray-100 last:border-none">
-                                        <img src="${user.avatar}" alt="${user.name}" class="w-9 h-9 rounded-full object-cover border border-gray-300 flex-shrink-0">
-                                        <div class="overflow-hidden">
-                                            <h4 class="text-sm font-bold text-gray-900 truncate">${user.name}</h4>
-                                            <!-- Diubah dari Skill menjadi ID User -->
-                                            <p class="text-xs text-gray-500">ID: <span class="text-gray-700">${user.id}</span></p>
-                                        </div>
-                                    </a>
-                                `;
-                                searchDropdown.innerHTML += item;
-                            });
+                try {
+                    const response = await fetch(
+                        `{{ route('users.search') }}?q=${encodeURIComponent(query)}`, {
+                            headers: {
+                                'Accept': 'application/json'
+                            },
+                            signal: searchController.signal
                         }
-                        searchDropdown.classList.remove('hidden');
-                    })
-                    .catch(err => console.error('Error searching users:', err));
+                    );
+
+                    if (!response.ok) throw new Error('Pencarian gagal');
+
+                    const users = await response.json();
+
+                    if (searchInput.value.trim() !== query) return;
+
+                    searchDropdown.innerHTML = '';
+
+                    if (!Array.isArray(users) || users.length === 0) {
+                        searchDropdown.innerHTML =
+                            '<p class="p-4 text-center text-sm text-gray-500">User tidak ditemukan.</p>';
+                        return;
+                    }
+
+                    users.forEach(function(user) {
+                        const link = document.createElement('a');
+                        link.href = user.url;
+                        link.className =
+                            'flex items-center gap-3 border-b border-gray-100 px-4 py-3 hover:bg-gray-50';
+
+                        const avatar = document.createElement('img');
+                        avatar.src = user.avatar;
+                        avatar.alt = '';
+                        avatar.className =
+                            'h-9 w-9 rounded-full border border-gray-200 object-cover';
+
+                        const info = document.createElement('div');
+                        info.className = 'min-w-0';
+
+                        const name = document.createElement('p');
+                        name.className = 'truncate text-sm font-semibold';
+                        name.textContent = user.name;
+
+                        const id = document.createElement('p');
+                        id.className = 'text-xs text-gray-500';
+                        id.textContent = `ID: ${user.id}`;
+
+                        info.append(name, id);
+                        link.append(avatar, info);
+                        searchDropdown.appendChild(link);
+                    });
+                } catch (error) {
+                    if (error.name === 'AbortError') return;
+
+                    searchDropdown.innerHTML =
+                        '<p class="p-4 text-sm text-gray-500">Pencarian gagal. Coba lagi.</p>';
+
+                    console.error(error);
+                }
             }, 300);
         });
 
-        // Tutup dropdown jika mengklik di luar area input pencarian
-        window.addEventListener('click', function(e) {
-            if (searchInput && searchDropdown) {
-                if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
-                    searchDropdown.classList.add('hidden');
-                }
+        document.addEventListener('click', function(event) {
+            if (
+                !searchInput.contains(event.target) &&
+                !searchDropdown.contains(event.target)
+            ) {
+                searchDropdown.classList.add('hidden');
             }
         });
-    }
-
-        // Fungsi buka/tutup dropdown
-        function toggleMenu(event) {
-
-            event.stopPropagation();
-
-            const dropdown = document.getElementById('dropdownMenu');
-            const button = document.getElementById('menuButton');
-            const chevron = document.getElementById('chevronIcon');
-
-            if (!dropdown || !button) return;
-
-            const isHidden = dropdown.classList.contains('hidden');
-
-            if (isHidden) {
-
-                // Tampilkan dropdown
-                dropdown.classList.remove('hidden');
-
-                button.setAttribute('aria-expanded', 'true');
-
-                // Putar ikon panah
-                if (chevron) {
-                    chevron.classList.add('rotate-180');
-                }
-
-            } else {
-
-                // Sembunyikan dropdown
-                dropdown.classList.add('hidden');
-
-                button.setAttribute('aria-expanded', 'false');
-
-                // Kembalikan ikon panah
-                if (chevron) {
-                    chevron.classList.remove('rotate-180');
-                }
-
-            }
-
-        }
-
-
-        // Tutup dropdown jika klik di luar
-        document.addEventListener('click', function(event) {
-
-                    const dropdown = document.getElementById('dropdownMenu');
-                    const button = document.getElementById('menuButton');
-                    const chevron = document.getElementById('chevronIcon');
-
-                    if (!dropdown || !button) return;
-
-                    if (
-                        !dropdown.contains(event.target) &&
-                        !button.contains(event.target)
-                    ) {
-
-                        dropdown.classList.add('hidden');
-
-                        button.setAttribute('aria-expanded', 'false');
-
-                        if (chevron) {
-                            chevron.classList.remove('rotate-180');
-                        }
-
-                    }  
-                  });
-               
-                    //SIDEBAR 
-
-                    const sidebarButton = document.getElementById('sidebarButton');
-                    const sidebar = document.getElementById('sidebar');
-                    const sidebarOverlay = document.getElementById('sidebarOverlay');
-                    const closeSidebar = document.getElementById('closeSidebarButton');
-
-                    // Buka sidebar
-                    sidebarButton.addEventListener('click', function() {
-                        sidebar.classList.remove('-translate-x-full');
-                        sidebarOverlay.classList.remove('hidden');
-                    });
-
-                    // Tutup sidebar dengan tombol X
-                    closeSidebar.addEventListener('click', function() {
-                        sidebar.classList.add('-translate-x-full');
-                        sidebarOverlay.classList.add('hidden');
-                    });
-
-                    // Tutup sidebar dengan klik overlay
-                    sidebarOverlay.addEventListener('click', function() {
-                        sidebar.classList.add('-translate-x-full');
-                        sidebarOverlay.classList.add('hidden');
-                    });
-        </script>
+    </script>
 
 </body>
 

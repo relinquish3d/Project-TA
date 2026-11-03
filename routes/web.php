@@ -1,16 +1,21 @@
 <?php
+
+use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryGameController;
 use App\Http\Controllers\FriendController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\DashboardController;
+
 
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/search-users', [UserController::class, 'search'])->name('users.search');
@@ -20,48 +25,28 @@ Route::get('/', function () {
 });
 
 //dashboard user
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('patch.profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
     Route::get('/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{id}', [ChatController::class, 'send'])->name('chat.send');
     Route::post('/chat/{id}/typing', [ChatController::class, 'typing'])->name('chat.typing');
 });
+
 Route::middleware('web')->group(function () {
     Route::get('auth/google', [App\Http\Controllers\GoogleController::class, 'redirectToGoogle']);
     Route::get('auth/google/callback', [App\Http\Controllers\GoogleController::class, 'handleGoogleCallback']);
 });
 
-
-
 Route::middleware('guest')->group(function () {
-    // Tampilan Step 1
-    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-
-    // Redirect jika akses register/step-1 via GET (Mencegah error 405)
-    Route::get('register/step-1', function () {
-        return redirect()->route('register');
-    });
-
-    // Proses Submit Step 1 (POST)
-    Route::post('register/step-1', [RegisteredUserController::class, 'postStep1'])->name('register.step1');
-
-    // Tampilan Step 2 (Create Profile)
-    Route::get('register/profile', [RegisteredUserController::class, 'showCreateProfile'])->name('register.profile');
-
-    // Proses Submit Final Step 2 (POST)
-    Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
-});
-
-    Route::middleware('guest')->group(function () {
     // Step 1: Register Account
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::get('register/step-1', function () {
@@ -78,15 +63,13 @@ Route::middleware('guest')->group(function () {
     Route::post('register/complete', [RegisteredUserController::class, 'store'])->name('register.complete');
 });
 
-//dasboard admin
+// Dashboard Admin
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
-    Route::get('/dashboard/admin', function () {
-        $reports = \App\Models\Report::with('user')->latest()->get();
-        return view('dashboard_admin', compact('reports'));
-    })->name('admin.dashboard');
+    Route::get('/dashboard/admin', [
+        \App\Http\Controllers\AdminController::class,
+        'dashboard'
+    ])->name('admin.dashboard');
 });
-
-require __DIR__.'/auth.php';
 
 Route::middleware(['auth'])->group(function () {
 
@@ -109,20 +92,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/categories', [CategoryGameController::class, 'store'])->name('admin.categories.store');
         Route::put('/categories/{id}', [CategoryGameController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{id}', [CategoryGameController::class, 'destroy'])->name('admin.categories.destroy');
-
-        // Manajemen Status Tiket Laporan (Report)
-        Route::patch('/reports/{id}/status', [\App\Http\Controllers\ReportController::class, 'updateStatus'])->name('admin.reports.status');
     });
 
 });
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-});
-
-use App\Http\Controllers\ReportController;
 
 // Fitur Report & Inbox Ticketing
 Route::middleware(['auth'])->group(function () {
@@ -132,7 +104,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Fitur Rating / Ulasan User
-use App\Http\Controllers\RatingController;
 Route::middleware(['auth'])->group(function () {
     Route::post('/rating/{user}', [RatingController::class, 'store'])->name('rating.store');
 });
+
+require __DIR__.'/auth.php';
