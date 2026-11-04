@@ -113,6 +113,7 @@ class ProfileController extends Controller
      */
     public function show(User $user): View
     {
+        /** @var User|null $authUser */
         $authUser = Auth::user();
         $reports = $authUser ? $authUser->reports()->latest()->get() : collect();
         $inProgressReportsCount = $authUser ? $authUser->reports()->where('status', 'in_progress')->count() : 0;

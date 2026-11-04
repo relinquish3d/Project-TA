@@ -60,7 +60,7 @@
                             </div>
                         </div>
                         <span class="text-xs text-gray-600 self-start mt-1 pointer-events-none">
-                            {{ $user->last_message ? $user->last_message->created_at->format('H:i') : '' }}
+                            {{ $user->last_message?->created_at ? $user->last_message->created_at->format('H:i') : '' }}
                         </span>
                     </a>
                 @empty
@@ -152,135 +152,153 @@
     </div>
 
     <script src="https://js.pusher.com/7.2.0/pusher.min.js"></script>
+    <script id="chat-config" type="application/json">
+        {!! json_encode([
+            'pusherKey' => env('PUSHER_APP_KEY'),
+            'pusherCluster' => env('PUSHER_APP_CLUSTER', 'ap1'),
+            'authId' => auth()->id(),
+            'activeUser' => isset($activeUser) && $activeUser ? [
+                'id' => $activeUser->id,
+                'name' => $activeUser->name,
+                'avatar' => $activeUser->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($activeUser->name),
+                'typingUrl' => route('chat.typing', $activeUser->id),
+                'sendUrl' => route('chat.send', $activeUser->id),
+            ] : null,
+            'senderAvatar' => auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name),
+            'csrfToken' => csrf_token(),
+        ]) !!}
+    </script>
     <script>
+        const chatConfig = JSON.parse(document.getElementById('chat-config').textContent);
+
         const container = document.getElementById('messages-container');
         if (container) {
             container.scrollTop = container.scrollHeight;
         }
-
-        @if(env('PUSHER_APP_KEY'))
-        const pusher = new Pusher('{{ env('PUSHER_APP_KEY') }}', { cluster: '{{ env('PUSHER_APP_CLUSTER', 'ap1') }}' });
-        const userChannel = pusher.subscribe('chat.{{ auth()->id() }}');
 
         function updateSidebar(userId, text) {
             const el = document.getElementById('contact-last-msg-' + userId);
             if (el) el.textContent = text;
         }
 
-        @if(isset($activeUser))
-        const activeUserId = {{ $activeUser->id }};
-        const senderAvatar = @json(auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name));
-        const receiverAvatar = @json($activeUser->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($activeUser->name));
-        const typingIndicator = document.getElementById('typing-indicator');
-        let hideTypingTimeout = null;
+        if (chatConfig.pusherKey) {
+            const pusher = new Pusher(chatConfig.pusherKey, { cluster: chatConfig.pusherCluster });
+            const userChannel = pusher.subscribe('chat.' + chatConfig.authId);
 
-        function appendMessage(text, isSender) {
-            const emptyHint = document.getElementById('empty-chat-message');
-            if (emptyHint) emptyHint.remove();
+            if (chatConfig.activeUser) {
+                const activeUserId = chatConfig.activeUser.id;
+                const senderAvatar = chatConfig.senderAvatar;
+                const receiverAvatar = chatConfig.activeUser.avatar;
+                const typingIndicator = document.getElementById('typing-indicator');
+                let hideTypingTimeout = null;
 
-            const row = document.createElement('div');
-            if (isSender) {
-                row.className = 'flex items-end justify-end space-x-2';
-                const bubble = document.createElement('div');
-                bubble.className = 'bg-[#C4C4C4] text-black px-4 py-2 rounded-2xl max-w-xs text-sm break-words';
-                bubble.textContent = text;
+                function appendMessage(text, isSender) {
+                    const emptyHint = document.getElementById('empty-chat-message');
+                    if (emptyHint) emptyHint.remove();
 
-                const img = document.createElement('img');
-                img.src = senderAvatar;
-                img.className = 'w-8 h-8 rounded-full object-cover';
+                    const row = document.createElement('div');
+                    if (isSender) {
+                        row.className = 'flex items-end justify-end space-x-2';
+                        const bubble = document.createElement('div');
+                        bubble.className = 'bg-[#C4C4C4] text-black px-4 py-2 rounded-2xl max-w-xs text-sm break-words';
+                        bubble.textContent = text;
 
-                row.appendChild(bubble);
-                row.appendChild(img);
-            } else {
-                row.className = 'flex items-start space-x-2';
-                const img = document.createElement('img');
-                img.src = receiverAvatar;
-                img.className = 'w-8 h-8 rounded-full object-cover';
+                        const img = document.createElement('img');
+                        img.src = senderAvatar;
+                        img.className = 'w-8 h-8 rounded-full object-cover';
 
-                const bubble = document.createElement('div');
-                bubble.className = 'border border-gray-300 text-black px-4 py-2 rounded-2xl max-w-xs text-sm bg-white break-words';
-                bubble.textContent = text;
+                        row.appendChild(bubble);
+                        row.appendChild(img);
+                    } else {
+                        row.className = 'flex items-start space-x-2';
+                        const img = document.createElement('img');
+                        img.src = receiverAvatar;
+                        img.className = 'w-8 h-8 rounded-full object-cover';
 
-                row.appendChild(img);
-                row.appendChild(bubble);
-            }
+                        const bubble = document.createElement('div');
+                        bubble.className = 'border border-gray-300 text-black px-4 py-2 rounded-2xl max-w-xs text-sm bg-white break-words';
+                        bubble.textContent = text;
 
-            if (typingIndicator) {
-                container.insertBefore(row, typingIndicator);
-            } else {
-                container.appendChild(row);
-            }
-            container.scrollTop = container.scrollHeight;
-        }
+                        row.appendChild(img);
+                        row.appendChild(bubble);
+                    }
 
-        userChannel.bind('new-message', function(data) {
-            updateSidebar(data.sender_id, data.message);
-            if (data.sender_id == activeUserId) {
-                if (typingIndicator) typingIndicator.classList.add('hidden');
-                appendMessage(data.message, false);
-            }
-        });
-
-        userChannel.bind('typing', function(data) {
-            if (data.from_id == activeUserId && typingIndicator) {
-                typingIndicator.classList.remove('hidden');
-                container.scrollTop = container.scrollHeight;
-
-                clearTimeout(hideTypingTimeout);
-                hideTypingTimeout = setTimeout(() => {
-                    typingIndicator.classList.add('hidden');
-                }, 2500);
-            }
-        });
-
-        const messageInput = document.getElementById('message-input');
-        let lastTypingTime = 0;
-        if (messageInput) {
-            messageInput.addEventListener('input', function() {
-                const now = Date.now();
-                if (now - lastTypingTime > 1500) {
-                    lastTypingTime = now;
-                    fetch('{{ route('chat.typing', $activeUser->id) }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        }
-                    }).catch(() => {});
+                    if (typingIndicator) {
+                        container.insertBefore(row, typingIndicator);
+                    } else {
+                        container.appendChild(row);
+                    }
+                    container.scrollTop = container.scrollHeight;
                 }
-            });
-        }
 
-        const chatForm = document.getElementById('chat-form');
-        if (chatForm && messageInput) {
-            chatForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const text = messageInput.value.trim();
-                if (!text) return;
-
-                messageInput.value = '';
-                appendMessage(text, true);
-                updateSidebar(activeUserId, text);
-
-                fetch('{{ route('chat.send', $activeUser->id) }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ message: text })
-                }).catch(err => {
-                    console.error('Send failed:', err);
+                userChannel.bind('new-message', function(data) {
+                    updateSidebar(data.sender_id, data.message);
+                    if (data.sender_id == activeUserId) {
+                        if (typingIndicator) typingIndicator.classList.add('hidden');
+                        appendMessage(data.message, false);
+                    }
                 });
-            });
+
+                userChannel.bind('typing', function(data) {
+                    if (data.from_id == activeUserId && typingIndicator) {
+                        typingIndicator.classList.remove('hidden');
+                        container.scrollTop = container.scrollHeight;
+
+                        clearTimeout(hideTypingTimeout);
+                        hideTypingTimeout = setTimeout(() => {
+                            typingIndicator.classList.add('hidden');
+                        }, 2500);
+                    }
+                });
+
+                const messageInput = document.getElementById('message-input');
+                let lastTypingTime = 0;
+                if (messageInput) {
+                    messageInput.addEventListener('input', function() {
+                        const now = Date.now();
+                        if (now - lastTypingTime > 1500) {
+                            lastTypingTime = now;
+                            fetch(chatConfig.activeUser.typingUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': chatConfig.csrfToken,
+                                    'Content-Type': 'application/json'
+                                }
+                            }).catch(() => {});
+                        }
+                    });
+                }
+
+                const chatForm = document.getElementById('chat-form');
+                if (chatForm && messageInput) {
+                    chatForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const text = messageInput.value.trim();
+                        if (!text) return;
+
+                        messageInput.value = '';
+                        appendMessage(text, true);
+                        updateSidebar(activeUserId, text);
+
+                        fetch(chatConfig.activeUser.sendUrl, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': chatConfig.csrfToken,
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ message: text })
+                        }).catch(err => {
+                            console.error('Send failed:', err);
+                        });
+                    });
+                }
+            } else {
+                userChannel.bind('new-message', function(data) {
+                    updateSidebar(data.sender_id, data.message);
+                });
+            }
         }
-        @else
-        userChannel.bind('new-message', function(data) {
-            updateSidebar(data.sender_id, data.message);
-        });
-        @endif
-        @endif
     </script>
 </body>
 </html>

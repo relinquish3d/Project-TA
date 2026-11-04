@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Report;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
@@ -64,6 +65,7 @@ class ReportController extends Controller
     public function inbox(Request $request)
     {
         $status = $request->query('status'); // all, in_progress, completed
+        /** @var User $user */
         $user = Auth::user();
 
         $query = $user->reports()->latest();

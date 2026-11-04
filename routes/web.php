@@ -43,25 +43,6 @@ Route::middleware('web')->group(function () {
 
 
 Route::middleware('guest')->group(function () {
-    // Tampilan Step 1
-    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
-
-    // Redirect jika akses register/step-1 via GET (Mencegah error 405)
-    Route::get('register/step-1', function () {
-        return redirect()->route('register');
-    });
-
-    // Proses Submit Step 1 (POST)
-    Route::post('register/step-1', [RegisteredUserController::class, 'postStep1'])->name('register.step1');
-
-    // Tampilan Step 2 (Create Profile)
-    Route::get('register/profile', [RegisteredUserController::class, 'showCreateProfile'])->name('register.profile');
-
-    // Proses Submit Final Step 2 (POST)
-    Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
-});
-
-    Route::middleware('guest')->group(function () {
     // Step 1: Register Account
     Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
     Route::get('register/step-1', function () {
@@ -69,9 +50,11 @@ Route::middleware('guest')->group(function () {
     });
     Route::post('register/step-1', [RegisteredUserController::class, 'postStep1'])->name('register.step1');
 
-    // Step 2: Create Profile
+    // Step 2: Create Profile (dukung register/profile dan create-profile)
+    Route::get('register/profile', [RegisteredUserController::class, 'showCreateProfile'])->name('register.profile');
     Route::get('create-profile', [RegisteredUserController::class, 'showCreateProfile'])->name('register.profile-create');
     Route::post('create-profile', [RegisteredUserController::class, 'postStep2'])->name('register.postProfile');
+    Route::post('register/profile', [RegisteredUserController::class, 'postStep2']);
 
     // Step 3: Choose Game
     Route::get('choose-game', [RegisteredUserController::class, 'showChooseGame'])->name('register.game');
