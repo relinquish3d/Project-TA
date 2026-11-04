@@ -10,7 +10,8 @@ class CategoryGameController extends Controller
 {
     public function index()
     {
-        $categories = CategoryGame::latest()->get();
+        $categories = \App\Models\CategoryGame::latest()->get();
+
         return view('admin.categories.index', compact('categories'));
     }
 

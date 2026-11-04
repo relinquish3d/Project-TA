@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\CategoryGame;
 use App\Models\Rating;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -145,20 +145,11 @@ class User extends Authenticatable
     }
 
     /* --- RELASI RATING --- */
-
-    /**
-     * Rating yang DITERIMA oleh user ini (orang lain merating user ini).
-     * Gunakan: $user->ratingsReceived
-     */
     public function ratingsReceived()
     {
         return $this->hasMany(Rating::class, 'target_id', 'id');
     }
 
-    /**
-     * Rating yang DIBERIKAN oleh user ini (user ini merating orang lain).
-     * Gunakan: $user->ratingsGiven
-     */
     public function ratingsGiven()
     {
         return $this->hasMany(Rating::class, 'reviewer_id', 'id');
@@ -173,5 +164,53 @@ class User extends Authenticatable
     {
         $avg = $this->ratingsReceived()->avg('stars');
         return $avg !== null ? round((float)$avg, 2) : 5.00;
+    }
+
+    /**
+     * Detail game favorit user dengan gambar dan rating visual.
+     * Mengambil data dari kolom JSON favorite_games.
+     */
+    public function getFavoriteGamesDetailsAttribute(): array
+    {
+        $games = $this->favorite_games;
+        if (!is_array($games) || empty($games)) {
+            return [];
+        }
+
+        $imageMap = [
+            'mobile legends' => 'images/Game/ML.png',
+            'ml'             => 'images/Game/ML.png',
+            'pubg'           => 'images/Game/PUBG.png',
+            'ea sports fc'   => 'images/Game/FC.png',
+            'fc'             => 'images/Game/FC.png',
+            'valorant'       => 'images/Game/Valorant.png',
+        ];
+
+        $details = [];
+        foreach ($games as $gameName) {
+            if (!is_string($gameName) || trim($gameName) === '') {
+                continue;
+            }
+
+            $trimmed = trim($gameName);
+            $lower = strtolower($trimmed);
+
+            $matchedImage = 'images/Game/Valorant.png';
+            foreach ($imageMap as $key => $imagePath) {
+                if (str_contains($lower, $key)) {
+                    $matchedImage = $imagePath;
+                    break;
+                }
+            }
+
+            $details[] = [
+                'name'           => $trimmed,
+                'image'          => $matchedImage,
+                'rating'         => 4.8,
+                'total_sessions' => '50+',
+            ];
+        }
+
+        return $details;
     }
 }
