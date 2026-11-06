@@ -24,6 +24,7 @@
 
 <body class="bg-[#F8F9FD] min-h-screen text-gray-800 antialiased selection:bg-[#4C49ED] selection:text-white">
 
+    @if(!isset($openChat) || !$openChat)
     <!-- Loading Screen -->
     <div id="pageLoader"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white transition-opacity duration-300">
@@ -32,6 +33,7 @@
         <p class="mt-2 text-sm text-gray-500">Memuat dashboard...</p>
         <div class="mt-5 h-7 w-7 animate-spin rounded-full border-4 border-gray-200 border-t-black"></div>
     </div>
+    @endif
 
     {{--NAVBAR--}}
     <nav class="w-full fixed top-0 left-0 z-50 bg-white border-b border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.03)] h-18">
@@ -63,7 +65,7 @@
                 </a>
 
                 <!-- Chat -->
-                <a href="{{ route('chat.index') }}" class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
+                <a href="{{ route('chat.index') }}" onclick="event.preventDefault(); openChatSidebar();" class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors cursor-pointer">
                     <i data-lucide="message-square" class="w-4 h-4"></i>
                     <span>Chat</span>
                 </a>
@@ -455,7 +457,7 @@
                         <h2 class="text-base font-extrabold text-gray-900 tracking-tight">
                             Chat terbaru
                         </h2>
-                        <a href="{{ route('chat.index') }}" class="text-xs font-bold text-[#4C49ED] hover:underline">
+                        <a href="{{ route('chat.index') }}" onclick="event.preventDefault(); openChatSidebar();" class="text-xs font-bold text-[#4C49ED] hover:underline cursor-pointer">
                             Lihat semua
                         </a>
                     </div>
@@ -576,7 +578,7 @@
 
                     <!-- Bottom Link -->
                     <div class="mt-4 pt-4 border-t border-gray-100">
-                        <a href="{{ route('chat.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#4C49ED] hover:text-indigo-800 transition">
+                        <a href="{{ route('chat.index') }}" onclick="event.preventDefault(); openChatSidebar();" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#4C49ED] hover:text-indigo-800 transition cursor-pointer">
                             <span>Lihat semua chat</span>
                             <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                         </a>
@@ -596,16 +598,18 @@
         // Inisialisasi ikon Lucide
         lucide.createIcons();
 
-                // Loading halaman
+        // Loading halaman
         const pageLoader = document.getElementById('pageLoader');
 
-        window.addEventListener('load', function() {
-            pageLoader.classList.add('opacity-0', 'pointer-events-none');
+        if (pageLoader) {
+            window.addEventListener('load', function() {
+                pageLoader.classList.add('opacity-0', 'pointer-events-none');
 
-            setTimeout(function() {
-                pageLoader.classList.add('hidden');
-            }, 300);
-        });
+                setTimeout(function() {
+                    pageLoader.classList.add('hidden');
+                }, 300);
+            });
+        }
 
         // Elemen Dropdown
         const profileDropdownBtn = document.getElementById('profileDropdownBtn');
@@ -739,6 +743,9 @@
             });
         });
     </script>
+    {{-- Chat Sidebar Drawer --}}
+    @include('auth.chat.sidebar')
+
 </body>
 
 </html>

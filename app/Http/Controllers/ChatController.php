@@ -9,37 +9,68 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
-    public function index()
+    public static function getChatData($activeUserId = null)
     {
         $authId = Auth::id();
-        $users = User::where('id', '!=', $authId)->get()->map(function ($u) use ($authId) {
-            $u->last_message = $u->lastMessageWith($authId);
-            return $u;
-        })->sortByDesc(fn($u) => $u->last_message?->created_at)->values();
+
+        // Ambil semua pengguna selain diri sendiri dan bukan admin
+        $users = User::where('id', '!=', $authId)
+            ->where(function ($q) {
+                $q->where('role', '!=', 'admin')
+                  ->orWhereNull('role');
+            })
+            ->where(function ($q) {
+                $q->whereRaw('LOWER(name) != ?', ['admin'])
+                  ->whereRaw('LOWER(email) not like ?', ['%admin%']);
+            })
+            ->get()
+            ->map(function ($u) use ($authId) {
+                $u->last_message = $u->lastMessageWith($authId);
+                return $u;
+            })
+            ->sortByDesc(fn($u) => $u->last_message?->created_at)
+            ->values();
 
         $activeUser = null;
-        $messages = collect();
+        if ($activeUserId) {
+            $candidate = User::find($activeUserId);
+            if ($candidate && ($candidate->role !== 'admin' && strtolower($candidate->name) !== 'admin')) {
+                $activeUser = $candidate;
+            }
+        }
+        if (!$activeUser && $users->isNotEmpty()) {
+            $activeUser = $users->first();
+        }
 
-        return view('auth.chat.chat', compact('users', 'activeUser', 'messages'));
+        $messages = collect();
+        if ($activeUser) {
+            $id = $activeUser->id;
+            $messages = Message::where(function ($q) use ($authId, $id) {
+                $q->where('sender_id', $authId)->where('receiver_id', $id);
+            })->orWhere(function ($q) use ($authId, $id) {
+                $q->where('sender_id', $id)->where('receiver_id', $authId);
+            })->orderBy('created_at', 'asc')->get();
+        }
+
+        return compact('users', 'activeUser', 'messages');
+    }
+
+    public function index()
+    {
+        $dashboardData = DashboardController::getDashboardData();
+        $chatData = self::getChatData();
+        $openChat = true;
+
+        return view('dashboard', array_merge($dashboardData, $chatData, compact('openChat')));
     }
 
     public function show($id)
     {
-        $authId = Auth::id();
-        $activeUser = User::findOrFail($id);
+        $dashboardData = DashboardController::getDashboardData();
+        $chatData = self::getChatData($id);
+        $openChat = true;
 
-        $users = User::where('id', '!=', $authId)->get()->map(function ($u) use ($authId) {
-            $u->last_message = $u->lastMessageWith($authId);
-            return $u;
-        })->sortByDesc(fn($u) => $u->last_message?->created_at)->values();
-
-        $messages = Message::where(function ($q) use ($authId, $id) {
-            $q->where('sender_id', $authId)->where('receiver_id', $id);
-        })->orWhere(function ($q) use ($authId, $id) {
-            $q->where('sender_id', $id)->where('receiver_id', $authId);
-        })->orderBy('created_at', 'asc')->get();
-
-        return view('auth.chat.chat', compact('users', 'activeUser', 'messages'));
+        return view('dashboard', array_merge($dashboardData, $chatData, compact('openChat')));
     }
 
     public function send(Request $request, $id)
