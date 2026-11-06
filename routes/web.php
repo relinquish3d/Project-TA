@@ -82,7 +82,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/friends/remove/{id}', [FriendController::class, 'removeFriend'])->name('friends.remove');
 
     // === ROUTE ADMIN (CRUD ADMIN & KATEGORI GAME) ===
-    Route::prefix('admin')->group(function () {
+    Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->group(function () {
+
+        // Dashboard Admin
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
         // CRUD Admin Users
         Route::get('/users', [AdminController::class, 'index'])->name('admin.users.index');
         Route::post('/users', [AdminController::class, 'store'])->name('admin.users.store');
@@ -95,7 +99,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/categories/{id}', [CategoryGameController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{id}', [CategoryGameController::class, 'destroy'])->name('admin.categories.destroy');
     });
-
 });
 
 // Fitur Report & Inbox Ticketing
@@ -110,4 +113,4 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/rating/{user}', [RatingController::class, 'store'])->name('rating.store');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

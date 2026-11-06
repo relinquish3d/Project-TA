@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -14,9 +15,6 @@ class AdminController extends Controller
         $admins = User::where('role', 'admin')->get();
         return view('admin.users.index', compact('admins'));
     }
-
-
-
 
     public function store(Request $request)
     {
@@ -60,11 +58,16 @@ class AdminController extends Controller
     public function destroy($id)
     {
         $admin = User::findOrFail($id);
+
+        // Mencegah admin menghapus akunnya sendiri yang sedang aktif
+        if (Auth::id() == $admin->id) {
+            return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang digunakan!');
+        }
+
         $admin->delete();
 
         return back()->with('success', 'Admin berhasil dihapus!');
     }
-
 
     public function dashboard()
     {
@@ -76,12 +79,8 @@ class AdminController extends Controller
 
         $reportStats = [
             'total' => $reports->count(),
-            'in_progress' => $reports
-                ->where('status', 'in_progress')
-                ->count(),
-            'completed' => $reports
-                ->where('status', 'completed')
-                ->count(),
+            'in_progress' => $reports->where('status', 'in_progress')->count(),
+            'completed' => $reports->where('status', 'completed')->count(),
         ];
 
         $latestUsers = User::latest()
