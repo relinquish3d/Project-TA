@@ -510,8 +510,7 @@
 
                     <!-- Bottom Link -->
                     <div class="mt-4 pt-4 border-t border-gray-100">
-                        <a href="{{ route('chat.index') }}" onclick="event.preventDefault(); openChatSidebar();" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#4C49ED] hover:text-indigo-800 transition cursor-pointer">
-                        <a href="{{ route('chat.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-black hover:underline transition">
+                        <a href="{{ route('chat.index') }}" onclick="event.preventDefault(); openChatSidebar();" class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-black hover:underline transition cursor-pointer">
                             <span>Lihat semua chat</span>
                             <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                         </a>
