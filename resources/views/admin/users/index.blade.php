@@ -72,12 +72,12 @@
                                 </button>
                                 <!-- Menggunakan route admin.users.destroy -->
                                 <form action="{{ route('admin.users.destroy', $admin->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus admin ini?')">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-md text-xs font-medium transition">
-        Hapus
-    </button>
-</form>
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-md text-xs font-medium transition">
+                                        Hapus
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @empty
