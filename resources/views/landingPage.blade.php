@@ -47,7 +47,19 @@
         <div class="flex items-center gap-8">
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ route('chat.index') }}">Chat</a>
             <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="#gameFavorite">Game Favorit</a>
-            <a class="text-gray-800 hover:text-black text-sm font-medium transition-colors" href="{{ url('/') }}">Home</a>
+            @auth
+    @if(auth()->user()->role === 'user')
+        <a href="{{ route('dashboard') }}"
+            class="bg-[#D9D9D9] text-gray-800 hover:text-black text-sm font-medium rounded-xl transition-colors">
+            Dashboard
+        </a>
+    @elseif(auth()->user()->role === 'admin')
+        <a href="{{ route('admin.dashboard') }}"
+            class="bg-[#D9D9D9] text-gray-800 hover:text-black text-sm font-medium rounded-xl transition-colors">
+            Admin Dashboard
+        </a>
+    @endif
+@endauth
         </div>
 
         <!-- Profile Photo -->
