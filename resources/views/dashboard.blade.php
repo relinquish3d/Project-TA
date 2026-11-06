@@ -14,6 +14,8 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         body {
@@ -34,14 +36,14 @@
     </div>
 
     {{--NAVBAR--}}
-    <nav class="w-full fixed top-0 left-0 z-50 bg-white border-b border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.03)] h-18">
-        <div class="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
+    <nav class="w-full fixed top-0 left-0 z-50 bg-[#D9D9D9] border-b border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.03)] h-18">
+        <div class="max-w-10xl mx-auto h-full px-10 flex items-center justify-between">
             
             <!-- Brand Logo -->
-            <div class="flex items-center gap-3">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 group">
+            <div class="flex items-center gap-5">
+                <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
                     <img src="{{ asset('images/logo.png') }}" alt="PlayAll" class="w-9 h-9 object-contain transition-transform duration-200 group-hover:scale-105">
-                    <span class="text-xl font-extrabold tracking-tight text-gray-900 group-hover:text-[#4C49ED] transition-colors">
+                    <span class="text-xl font-extrabold text-gray-900">
                         PlayAll
                     </span>
                 </a>
@@ -50,10 +52,9 @@
             <!-- Center Navigation Links -->
             <div class="hidden md:flex items-center gap-8 h-full">
                 <!-- Dashboard (Active) -->
-                <a href="{{ route('dashboard') }}" class="relative flex items-center gap-2 h-full text-sm font-bold text-[#4C49ED]">
+                <a href="{{ route('dashboard') }}" class="relative flex items-center gap-2 h-full text-sm font-bold text-gray">
                     <i data-lucide="layout-grid" class="w-4 h-4 stroke-[2.5]"></i>
                     <span>Dashboard</span>
-                    <span class="absolute bottom-0 left-0 right-0 h-[3px] bg-[#4C49ED] rounded-full"></span>
                 </a>
 
                 <!-- Cari Teman -->
@@ -80,7 +81,7 @@
                 
                 {{-- Profile Section --}}
                 <div class="relative">
-                    <button id="profileDropdownBtn" class="flex items-center gap-3 p-1 rounded-full hover:bg-gray-50 transition cursor-pointer focus:outline-none">
+                    <button id="profileDropdownBtn" class="flex items-center gap-3 p-1 rounded-full hover:bg-gray-300 transition cursor-pointer focus:outline-none">
                         <div class="relative">
                             @if(Auth::user()->avatar)
                                 <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 shadow-xs">
@@ -140,30 +141,29 @@
                     </div>
                 </div>
 
-                {{-- Undangan Terbaru Icon Button & Dropdown (Sesuai Referensi Gambar) --}}
+                {{-- Dropdown Permintaan Berteman (Add Friend) --}}
                 <div class="relative">
                     <button id="inviteDropdownBtn"
-                            class="relative w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200/80 text-gray-700 flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none group"
-                            title="Undangan Mabar Terbaru">
-                        <i data-lucide="mail" class="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors"></i>
+                            class="relative w-10 h-10 rounded-full bg-[#D9D9D9] hover:bg-gray-200/80 text-gray-700 flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none group"
+                            title="Permintaan Berteman">
+                        <i data-lucide="user-plus" class="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors"></i>
                         
-                        @php
-                            $displayInviteCount = ($pendingInvitesCount ?? 0) > 0 ? $pendingInvitesCount : 2;
-                        @endphp
+                        @if(($pendingInvitesCount ?? 0) > 0)
                         <span id="inviteBadge" class="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-[#4C49ED] text-white text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-xs">
-                            {{ $displayInviteCount }}
+                            {{ $pendingInvitesCount }}
                         </span>
+                        @endif
                     </button>
 
-                    <!-- Floating Dropdown Undangan Terbaru (Style Referensi Gambar 1 disesuaikan ke Tema Terang) -->
+                    <!-- Floating Dropdown Permintaan Berteman -->
                     <div id="inviteDropdownMenu" class="hidden absolute right-0 mt-3 w-88 sm:w-96 bg-white border border-gray-150 rounded-2xl shadow-2xl shadow-indigo-950/10 p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                         
                         <!-- Header Dropdown -->
                         <div class="flex items-center justify-between pb-3.5 border-b border-gray-100">
                             <div class="flex items-center gap-2">
-                                <h3 class="font-extrabold text-base text-gray-900">Undangan terbaru</h3>
-                                <span class="bg-indigo-50 text-[#4C49ED] text-xs font-bold px-2 py-0.5 rounded-full">
-                                    {{ $displayInviteCount }} baru
+                                <h3 class="font-extrabold text-base text-gray-900">Permintaan Berteman</h3>
+                                <span id="inviteCountLabel" class="bg-indigo-50 text-[#4C49ED] text-xs font-bold px-2 py-0.5 rounded-full">
+                                    {{ $pendingInvitesCount ?? 0 }} baru
                                 </span>
                             </div>
                             <button id="closeInviteDropdown" class="text-gray-400 hover:text-gray-600 p-1 rounded-lg hover:bg-gray-100 transition cursor-pointer">
@@ -173,20 +173,18 @@
 
                         <!-- Subtitle -->
                         <p class="text-xs text-gray-500 mt-2.5 mb-3.5">
-                            Permintaan teman untuk bermain bersama kamu
+                            Pengguna yang meminta berteman denganmu
                         </p>
 
-                        <!-- List Undangan -->
-                        <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
-                            @if(isset($pendingInvites) && $pendingInvites->count() > 0)
-                                {{-- Data Undangan Asli dari Database --}}
-                                @foreach($pendingInvites as $inv)
+                        <!-- List Permintaan Berteman -->
+                        <div class="space-y-3 max-h-80 overflow-y-auto pr-1" id="inviteListContainer">
+                            @forelse($pendingInvites as $inv)
                                 <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50/70 border border-gray-100 hover:bg-gray-50 transition invite-row" data-id="{{ $inv->id_invite ?? $inv->id }}">
                                     <div class="flex items-center gap-3 overflow-hidden">
                                         @if($inv->sender && $inv->sender->avatar)
                                             <img src="{{ $inv->sender->avatar_url }}" alt="{{ $inv->sender->name }}" class="w-10 h-10 rounded-full object-cover border border-gray-200 shrink-0">
                                         @else
-                                            <div class="w-10 h-10 rounded-full bg-gray-200 text-gray-700 font-bold text-sm flex items-center justify-center shrink-0">
+                                            <div class="w-10 h-10 rounded-full bg-gray-900 text-white font-bold text-sm flex items-center justify-center shrink-0">
                                                 {{ strtoupper(substr($inv->sender->name ?? 'U', 0, 1)) }}
                                             </div>
                                         @endif
@@ -194,7 +192,7 @@
                                             <h4 class="text-sm font-bold text-gray-900 truncate">
                                                 {{ $inv->sender->display_name ?? $inv->sender->name ?? 'Gamer' }}
                                             </h4>
-                                            <p class="text-xs text-gray-500 truncate">Mengundangmu untuk mabar</p>
+                                            <p class="text-xs text-gray-500 truncate">Mengirim permintaan berteman</p>
                                             <span class="text-[10px] text-gray-400 mt-0.5 block">
                                                 {{ $inv->created_at ? $inv->created_at->diffForHumans() : 'Baru saja' }}
                                             </span>
@@ -202,84 +200,35 @@
                                     </div>
                                     <div class="flex items-center gap-1.5 shrink-0 ml-2">
                                         <!-- Terima -->
-                                        <form action="{{ route('friends.accept', $inv->id_invite ?? $inv->id) }}" method="POST" class="inline m-0 ajax-invite-form">
+                                        <form action="{{ route('friends.accept', $inv->id_invite ?? $inv->id) }}" method="POST" class="inline m-0 ajax-accept-form">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="w-8 h-8 rounded-lg bg-[#4C49ED] hover:bg-indigo-700 text-white flex items-center justify-center transition shadow-xs cursor-pointer" title="Terima Undangan">
+                                            <button type="submit" class="w-8 h-8 rounded-lg bg-[#4C49ED] hover:bg-indigo-700 text-white flex items-center justify-center transition shadow-xs cursor-pointer" title="Terima Permintaan">
                                                 <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
                                             </button>
                                         </form>
                                         <!-- Tolak -->
-                                        <form action="{{ route('friends.remove', $inv->id_invite ?? $inv->id) }}" method="POST" class="inline m-0 ajax-invite-form">
+                                        <form action="{{ route('friends.remove', $inv->id_invite ?? $inv->id) }}" method="POST" class="inline m-0 ajax-decline-form">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="w-8 h-8 rounded-lg bg-white border border-gray-200 hover:bg-gray-100 text-gray-600 flex items-center justify-center transition cursor-pointer" title="Tolak">
+                                            <button type="submit" class="w-8 h-8 rounded-lg bg-[#FF1818] hover:bg-red-700 text-white flex items-center justify-center transition cursor-pointer" title="Tolak Permintaan">
                                                 <i data-lucide="x" class="w-4 h-4 stroke-[2.5]"></i>
                                             </button>
                                         </form>
                                     </div>
                                 </div>
-                                @endforeach
-                            @else
-                                {{-- Fallback Demo Data Sesuai Canva --}}
-                                <!-- Item 1: Arga (EA FC Mobile) -->
-                                <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50/70 border border-gray-100 hover:bg-gray-50 transition invite-row">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-black text-white font-bold flex items-center justify-center shrink-0">
-                                            <i data-lucide="user" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-bold text-gray-900 leading-tight">Arga</h4>
-                                            <p class="text-xs text-gray-500 leading-tight mt-0.5">Mengundangmu untuk mabar</p>
-                                            <div class="flex items-center gap-1.5 mt-1">
-                                                <img src="{{ asset('images/Game/FC.png') }}" class="w-3.5 h-3.5 rounded object-cover" alt="FC">
-                                                <span class="text-[11px] font-semibold text-gray-600">EA FC Mobile</span>
-                                                <span class="text-[10px] text-gray-400 ml-1">• 5 menit lalu</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 shrink-0 ml-2">
-                                        <button onclick="handleDemoInvite(this, true)" class="w-8 h-8 rounded-lg bg-[#4C49ED] hover:bg-indigo-700 text-white flex items-center justify-center transition shadow-xs cursor-pointer" title="Terima Undangan">
-                                            <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
-                                        </button>
-                                        <button onclick="handleDemoInvite(this, false)" class="w-8 h-8 rounded-lg bg-white border border-gray-200 hover:bg-gray-100 text-gray-600 flex items-center justify-center transition cursor-pointer" title="Tolak">
-                                            <i data-lucide="x" class="w-4 h-4 stroke-[2.5]"></i>
-                                        </button>
-                                    </div>
+                            @empty
+                                <div class="p-6 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200" id="emptyInviteNotice">
+                                    <i data-lucide="users" class="w-6 h-6 text-gray-400 mx-auto mb-1.5"></i>
+                                    <p class="text-xs text-gray-500">Tidak ada permintaan berteman saat ini.</p>
                                 </div>
-
-                                <!-- Item 2: Violet (Valorant) -->
-                                <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50/70 border border-gray-100 hover:bg-gray-50 transition invite-row">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-black text-white font-bold flex items-center justify-center shrink-0">
-                                            <i data-lucide="user" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-bold text-gray-900 leading-tight">Violet</h4>
-                                            <p class="text-xs text-gray-500 leading-tight mt-0.5">Mengundangmu untuk mabar</p>
-                                            <div class="flex items-center gap-1.5 mt-1">
-                                                <img src="{{ asset('images/Game/Valorant.png') }}" class="w-3.5 h-3.5 rounded object-cover" alt="Valorant">
-                                                <span class="text-[11px] font-semibold text-gray-600">Valorant</span>
-                                                <span class="text-[10px] text-gray-400 ml-1">• 1 jam lalu</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 shrink-0 ml-2">
-                                        <button onclick="handleDemoInvite(this, true)" class="w-8 h-8 rounded-lg bg-[#4C49ED] hover:bg-indigo-700 text-white flex items-center justify-center transition shadow-xs cursor-pointer" title="Terima Undangan">
-                                            <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
-                                        </button>
-                                        <button onclick="handleDemoInvite(this, false)" class="w-8 h-8 rounded-lg bg-white border border-gray-200 hover:bg-gray-100 text-gray-600 flex items-center justify-center transition cursor-pointer" title="Tolak">
-                                            <i data-lucide="x" class="w-4 h-4 stroke-[2.5]"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            @endif
+                            @endforelse
                         </div>
 
                         <!-- Footer Link Button (Primary Purple) -->
                         <div class="mt-4 pt-3 border-t border-gray-100">
                             <a href="{{ route('friends.index') }}" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#4C49ED] hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm shadow-indigo-200 transition-all">
-                                <span>Lihat semua undangan</span>
+                                <span>Lihat semua di Cari Teman</span>
                                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                             </a>
                         </div>
@@ -293,8 +242,8 @@
     </nav>
 
 
-    {{-- ==================== MAIN CONTENT CONTAINER ==================== --}}
-    <main class="max-w-7xl mx-auto px-6 pt-26 pb-16">
+    {{-- Main Content --}}
+    <main class="max-w-10xl mx-auto px-6 pt-26 pb-16">
         
         <!-- Welcome Header Banner -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-7">
@@ -309,7 +258,7 @@
 
             <!-- Cari teman mabar Button -->
             <a href="{{ route('friends.index') }}"
-               class="inline-flex items-center justify-center gap-2.5 px-5 py-2.5 rounded-xl bg-[#4C49ED] hover:bg-indigo-700 text-white text-sm font-semibold shadow-md transition-all self-start md:self-auto cursor-pointer">
+               class="inline-flex items-center justify-center gap-2.5 px-5 py-2.5 rounded-xl bg-[#D9D9D9] hover:bg-[#A5978B] text-black text-sm font-semibold shadow-md transition-all self-start md:self-auto cursor-pointer">
                 <i data-lucide="users" class="w-4 h-4 stroke-[2.5]"></i>
                 <span>Cari teman mabar</span>
             </a>
@@ -329,46 +278,46 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                         
-                        <!-- Widget 1: Teman mabar aktif -->
-                        <div class="flex items-center gap-4 p-4 rounded-xl bg-[#FAFAFE] border border-gray-100 hover:border-indigo-200 transition cursor-pointer group">
-                            <div class="w-12 h-12 rounded-xl bg-[#F0EEFF] text-[#4C49ED] group-hover:bg-[#4C49ED] group-hover:text-white transition-all flex items-center justify-center shrink-0">
+                        <!--widget 1: Teman mabar -->
+                        <div class="flex items-center gap-4 p-4 rounded-xl bg-[#FAFAFE] border border-gray-100 hover:border-gray-300 transition cursor-pointer group">
+                            <div class="w-12 h-12 rounded-xl bg-[#F0EEFF] text-gray-500 group-hover:bg-black group-hover:text-white transition-all flex items-center justify-center shrink-0">
                                 <i data-lucide="users" class="w-6 h-6 stroke-[2.2]"></i>
                             </div>
                             <div>
-                                <p class="text-xs font-semibold text-gray-500 group-hover:text-[#4C49ED] transition-colors">Teman Mabar</p>
+                                <p class="text-xs font-semibold text-gray-500 group-hover:text-black transition-colors">Teman Mabar</p>
                                 <div class="flex items-center gap-2 mt-0.5">
                                     <span class="text-3xl font-black text-gray-900 ">
-                                        {{ ($activeFriendsCount ?? 0) > 0 ? $activeFriendsCount : 12 }}
+                                        {{ $activeFriendsCount ?? 0 }}
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Widget 2: Sesi bermain minggu ini -->
-                        <div class="flex items-center gap-4 p-4 rounded-xl bg-[#FAFAFE] border border-gray-100 hover:border-indigo-200 transition cursor-pointer group">
-                            <div class="w-12 h-12 rounded-xl bg-[#F0EEFF] text-[#4C49ED] group-hover:bg-[#4C49ED] group-hover:text-white transition-all flex items-center justify-center shrink-0">
-                                <i data-lucide="calendar" class="w-6 h-6 stroke-[2.2]"></i>
+                        <!-- Widget 2: Permintaan Terkirim -->
+                        <div class="flex items-center gap-4 p-4 rounded-xl bg-[#FAFAFE] border border-gray-100 hover:border-gray-300 transition cursor-pointer group">
+                            <div class="w-12 h-12 rounded-xl bg-[#F0EEFF] text-gray-500 group-hover:bg-black group-hover:text-white transition-all flex items-center justify-center shrink-0">
+                                <i data-lucide="send" class="w-6 h-6 stroke-[2.2]"></i>
                             </div>
                             <div>
-                                <p class="text-xs font-semibold text-gray-500 group-hover:text-[#4C49ED] transition-colors">Permintaan Berteman (Pending)</p>
+                                <p class="text-xs font-semibold text-gray-500 group-hover:text-black transition-colors">Permintaan Terkirim</p>
                                 <div class="flex items-center gap-2 mt-0.5">
                                     <span class="text-3xl font-black text-gray-900 ">
-                                        {{ $pendingAddFriendRequestCount ?? 5 }}
+                                        {{ $pendingAddFriendRequestCount ?? 0 }}
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Widget 3: Undangan baru (Bisa diklik untuk buka dropdown) -->
-                        <div onclick="openInviteDropdown()" class="flex items-center gap-4 p-4 rounded-xl bg-[#FAFAFE] border border-gray-100 hover:border-indigo-200 transition cursor-pointer group">
-                            <div class="w-12 h-12 rounded-xl bg-[#F0EEFF] text-[#4C49ED] group-hover:bg-[#4C49ED] group-hover:text-white transition-all flex items-center justify-center shrink-0">
-                                <i data-lucide="mail" class="w-6 h-6 stroke-[2.2]"></i>
+                        <!-- Widget 3: Permintaan Masuk (Bisa diklik untuk buka dropdown) -->
+                        <div onclick="openInviteDropdown()" class="flex items-center gap-4 p-4 rounded-xl bg-[#FAFAFE] border border-gray-100 hover:border-gray-300 transition cursor-pointer group">
+                            <div class="w-12 h-12 rounded-xl bg-[#F0EEFF] text-gray-500 group-hover:bg-black group-hover:text-white transition-all flex items-center justify-center shrink-0">
+                                <i data-lucide="user-plus" class="w-6 h-6 stroke-[2.2]"></i>
                             </div>
                             <div>
-                                <p class="text-xs font-semibold text-gray-500 group-hover:text-[#4C49ED] transition-colors">Follower</p>
+                                <p class="text-xs font-semibold text-gray-500 group-hover:text-black transition-colors">Permintaan Masuk</p>
                                 <div class="flex items-center gap-2 mt-0.5">
-                                    <span class="text-3xl font-black text-gray-900">
-                                        {{ ($pendingInvitesCount ?? 0) > 0 ? $pendingInvitesCount : 5 }}
+                                    <span class="text-3xl font-black text-gray-900" id="widgetInviteCount">
+                                        {{ $pendingInvitesCount ?? 0 }}
                                     </span>
                                 </div>
                             </div>
@@ -379,14 +328,14 @@
 
 
 <!-- Container Game Favorit -->
-<section id="gameFavoritSection" class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+<section id="gameFavoritSection" class="bg-white rounded-2xl border border-gray-300 p-6 shadow-sm">
     <!-- Section Header -->
     <div class="flex items-center justify-between mb-5">
         <div>
             <h2 class="text-lg font-bold text-slate-900 tracking-tight">Game favorit</h2>
             <p class="text-xs text-slate-500 mt-0.5">Daftar game yang kamu pilih saat registrasi</p>
         </div>
-        <a href="#" class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline transition">
+        <a href="#" class="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-black hover:underline transition">
             Jelajahi pemain
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -395,7 +344,7 @@
     </div>
 
     <!-- Grid Game Cards -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-7 gap-4">
         @forelse($user->favorite_games_details as $game)
             <div class="group relative flex flex-col rounded-xl p-2.5 transition-all duration-200 hover:bg-slate-50/80 border border-transparent hover:border-slate-200">
                 <!-- Poster / Cover Game -->
@@ -406,31 +355,14 @@
                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
-                    <!-- Overlay Badge Status Online (Opsional) -->
-                    <span class="absolute top-2 right-2 px-2 py-0.5 text-[10px] font-medium bg-slate-900/75 text-white backdrop-blur-md rounded-full">
-                        Online
-                    </span>
                 </div>
 
                 <!-- Informasi Game & Rating -->
                 <div class="mt-3 flex flex-col">
-                    <h3 class="font-bold text-sm text-slate-900 line-clamp-1 group-hover:text-indigo-600 transition-colors">
+                    <h3 class="font-bold text-sm text-gray-500 line-clamp-1 group-hover:text-black transition-colors">
                         {{ $game['name'] }}
                     </h3>
-
-                    <!-- Komponen Rating dibawah Nama Game -->
-                    <div class="flex items-center gap-1.5 mt-1">
-                        <div class="flex items-center text-amber-500">
-                            <svg class="w-7 h-7 fill-current" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                        </div>
-                        <span class="text-xl font-bold text-slate-800">
-                            {{ number_format($game['rating'], 1) }}
-                        </span>
-                        </span>
-                    </div>
-                </div>
+                </div> 
             </div>
         @empty
             <!-- State Kosong jika user belum memilih game -->
@@ -453,9 +385,9 @@
                     <!-- Header Chat Terbaru -->
                     <div class="flex items-center justify-between pb-4 border-b border-gray-100">
                         <h2 class="text-base font-extrabold text-gray-900 tracking-tight">
-                            Chat terbaru
+                            Friend List
                         </h2>
-                        <a href="{{ route('chat.index') }}" class="text-xs font-bold text-[#4C49ED] hover:underline">
+                        <a href="{{ route('chat.index') }}" class="text-xs font-bold text-gray-500 hover:text-black hover:underline">
                             Lihat semua
                         </a>
                     </div>
@@ -576,7 +508,7 @@
 
                     <!-- Bottom Link -->
                     <div class="mt-4 pt-4 border-t border-gray-100">
-                        <a href="{{ route('chat.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#4C49ED] hover:text-indigo-800 transition">
+                        <a href="{{ route('chat.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-black hover:underline transition">
                             <span>Lihat semua chat</span>
                             <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                         </a>
@@ -591,7 +523,6 @@
     </main>
 
 
-    {{-- ==================== INTERACTIVITY SCRIPTS ==================== --}}
     <script>
         // Inisialisasi ikon Lucide
         lucide.createIcons();
@@ -673,39 +604,62 @@
             }
         });
 
-        // Interaksi Demo Invite (Tolak/Terima visual feedback)
-        function handleDemoInvite(btn, isAccepted) {
-            const row = btn.closest('.invite-row');
-            if (row) {
-                row.style.transition = 'all 0.3s ease';
-                row.style.opacity = '0';
-                row.style.transform = 'translateX(20px)';
-                
-                setTimeout(() => {
-                    row.remove();
-                    if (inviteBadge) {
-                        let currentCount = parseInt(inviteBadge.textContent.trim()) || 0;
-                        if (currentCount > 1) {
-                            inviteBadge.textContent = currentCount - 1;
-                        } else {
-                            inviteBadge.remove();
-                        }
+        // SweetAlert2 Config dengan Tailwind murni
+        const dashboardSwalConfig = {
+            customClass: {
+                popup: 'rounded-3xl p-6 sm:p-7 shadow-2xl border border-gray-100 font-sans max-w-sm sm:max-w-md bg-white',
+                title: 'text-xl font-extrabold text-gray-900 tracking-tight',
+                htmlContainer: 'text-sm text-gray-500 mt-2 leading-relaxed',
+                actions: 'mt-6 gap-3 flex flex-row justify-center items-center',
+                confirmButton: 'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-red-600 hover:bg-red-700 shadow-sm transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500/30',
+                cancelButton: 'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-xs text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all cursor-pointer focus:outline-none'
+            },
+            buttonsStyling: false
+        };
+        const dashboardSwal = Swal.mixin(dashboardSwalConfig);
+
+        function decrementInviteCount() {
+            const inviteBadge = document.getElementById('inviteBadge');
+            const inviteCountLabel = document.getElementById('inviteCountLabel');
+            const widgetInviteCount = document.getElementById('widgetInviteCount');
+            const listContainer = document.getElementById('inviteListContainer');
+
+            if (listContainer) {
+                const remaining = Math.max(0, listContainer.querySelectorAll('.invite-row').length - 1);
+                if (inviteCountLabel) {
+                    inviteCountLabel.textContent = `${remaining} baru`;
+                }
+                if (widgetInviteCount) {
+                    widgetInviteCount.textContent = remaining;
+                }
+                if (inviteBadge) {
+                    if (remaining > 0) {
+                        inviteBadge.textContent = remaining;
+                    } else {
+                        inviteBadge.remove();
                     }
-                }, 300);
+                }
+                if (remaining === 0) {
+                    listContainer.innerHTML = `
+                        <div class="p-6 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200" id="emptyInviteNotice">
+                            <i data-lucide="users" class="w-6 h-6 text-gray-400 mx-auto mb-1.5"></i>
+                            <p class="text-xs text-gray-500">Tidak ada permintaan berteman saat ini.</p>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                }
             }
         }
 
-        // Interaksi AJAX untuk Form Undangan Riil
-        document.querySelectorAll('.ajax-invite-form').forEach(form => {
+        // Interaksi AJAX Terima Permintaan
+        document.querySelectorAll('.ajax-accept-form').forEach(form => {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const formEl = this;
                 const row = formEl.closest('.invite-row');
-                const actionUrl = formEl.getAttribute('action');
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-                const method = formEl.querySelector('input[name="_method"]')?.value || 'POST';
 
-                fetch(actionUrl, {
+                fetch(formEl.action, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
@@ -720,21 +674,72 @@
                         row.style.opacity = '0';
                         row.style.transform = 'translateX(20px)';
                         setTimeout(() => {
+                            decrementInviteCount();
                             row.remove();
-                            if (inviteBadge) {
-                                let currentCount = parseInt(inviteBadge.textContent.trim()) || 0;
-                                if (currentCount > 1) {
-                                    inviteBadge.textContent = currentCount - 1;
-                                } else {
-                                    inviteBadge.remove();
-                                }
-                            }
                         }, 300);
                     }
                 })
                 .catch(err => {
-                    // Fallback reload jika ada kendala
                     formEl.submit();
+                });
+            });
+        });
+
+        // Interaksi AJAX Tolak Permintaan dengan SweetAlert2
+        document.querySelectorAll('.ajax-decline-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formEl = this;
+                const row = formEl.closest('.invite-row');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+                dashboardSwal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, reject it!",
+                    cancelButtonText: "Cancel",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(formEl.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            },
+                            body: new FormData(formEl)
+                        })
+                        .then(res => {
+                            dashboardSwal.fire({
+                                title: "Rejected!",
+                                text: "Permintaan pertemanan berhasil ditolak.",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                                customClass: {
+                                    ...dashboardSwalConfig.customClass,
+                                    confirmButton: 'inline-flex items-center justify-center px-6 py-2.5 rounded-xl font-bold text-xs text-white bg-[#4C49ED] hover:bg-indigo-700 shadow-sm transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/30'
+                                }
+                            }).then(() => {
+                                if (row) {
+                                    row.style.transition = 'all 0.3s ease';
+                                    row.style.opacity = '0';
+                                    row.style.transform = 'translateX(20px)';
+                                    setTimeout(() => {
+                                        decrementInviteCount();
+                                        row.remove();
+                                    }, 300);
+                                } else {
+                                    window.location.reload();
+                                }
+                            });
+                        })
+                        .catch(err => {
+                            formEl.submit();
+                        });
+                    }
                 });
             });
         });

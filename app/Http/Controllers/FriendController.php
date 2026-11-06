@@ -10,77 +10,162 @@ use Illuminate\Support\Facades\Auth;
 class FriendController extends Controller
 {
     // Menampilkan halaman daftar teman & request add
-    public function index()
-    {
-        $userId = Auth::id();
+   public function index()
+{
+    $userId = Auth::id();
 
-        // Permintaan Add Teman yang masuk (Pending)
-        $incomingRequests = Invite::with('sender')
-            ->where('receiver_id', $userId)
-            ->where('status', 'pending')
-            ->get();
+    // 1. Permintaan pertemanan yang masuk
+    $incomingRequests = Invite::with('sender')
+        ->where('receiver_id', $userId)
+        ->where('status', 'pending')
+        ->get();
 
-        // Daftar Teman yang sudah di-accept
-        $friends = Invite::with(['sender', 'receiver'])
-            ->where('status', 'accepted')
-            ->where(function ($q) use ($userId) {
-                $q->where('sender_id', $userId)->orWhere('receiver_id', $userId);
-            })
-            ->get()
-            ->map(function ($friendship) use ($userId) {
-                return $friendship->sender_id == $userId ? $friendship->receiver : $friendship->sender;
-            });
+    // 2. Daftar teman yang sudah diterima
+    $friends = Invite::with(['sender', 'receiver'])
+        ->where('status', 'accepted')
+        ->where(function ($q) use ($userId) {
+            $q->where('sender_id', $userId)
+              ->orWhere('receiver_id', $userId);
+        })
+        ->get()
+        ->map(function ($friendship) use ($userId) {
+            return $friendship->sender_id == $userId
+                ? $friendship->receiver
+                : $friendship->sender;
+        });
 
-        // Daftar User yang belum di-add (rekomendasi teman)
-        $invitedUserIds = Invite::where('sender_id', $userId)->pluck('receiver_id')
-            ->merge(Invite::where('receiver_id', $userId)->pluck('sender_id'))
-            ->unique()
-            ->push($userId);
+    // 3. ID user yang sudah berteman dengan user login
+    $acceptedUserIds = Invite::where('status', 'accepted')
+        ->where(function ($q) use ($userId) {
+            $q->where('sender_id', $userId)
+              ->orWhere('receiver_id', $userId);
+        })
+        ->get()
+        ->map(function ($invite) use ($userId) {
+            return $invite->sender_id == $userId
+                ? $invite->receiver_id
+                : $invite->sender_id;
+        });
 
-        $usersToRecommend = User::whereNotIn('id', $invitedUserIds)->get();
+    // 4. ID user yang mengirim permintaan kepada user login
+    $incomingUserIds = Invite::where('receiver_id', $userId)
+        ->where('status', 'pending')
+        ->pluck('sender_id');
 
-        return view('friends.index', compact('incomingRequests', 'friends', 'usersToRecommend'));
+    // 5. ID user yang sudah dikirimi permintaan oleh user login
+    $pendingUserIds = Invite::where('sender_id', $userId)
+        ->where('status', 'pending')
+        ->pluck('receiver_id')
+        ->toArray();
+
+    // 6. User yang tidak perlu ditampilkan di rekomendasi
+    // Permintaan keluar Pending TIDAK dikecualikan.
+    $excludedUserIds = $acceptedUserIds
+        ->merge($incomingUserIds)
+        ->push($userId)
+        ->unique();
+
+    // 7. Rekomendasi teman
+    $usersToRecommend = User::whereNotIn('id', $excludedUserIds)
+        ->where('role', '!=', 'admin')
+        ->get();
+
+    return view('friends.index', compact(
+        'incomingRequests',
+        'friends',
+        'usersToRecommend',
+        'pendingUserIds'
+    ));
+}
+
+public function addFriend($receiver_id)
+{
+
+    if (Auth::user()->role === 'admin') {
+        return back()->with('error', 'Admin tidak dapat menambahkan teman.');
     }
 
-    // Kirim Permintaan Add Teman
-    public function addFriend($receiver_id)
-    {
-        Invite::create([
-            'sender_id' => Auth::id(),
-            'receiver_id' => $receiver_id,
-            'status' => 'pending',
-        ]);
+    $sender_id = Auth::id();
 
-        return back()->with('success', 'Permintaan pertemanan berhasil dikirim!');
+    if (!$receiver || $receiver->role === 'admin') {
+        return back()->with('error', 'Pengguna tidak tersedia.');
     }
+
+    // Tidak boleh menambahkan diri sendiri
+    if ($sender_id == $receiver_id) {
+        return back()->with('error', 'Kamu tidak bisa menambahkan diri sendiri.');
+    }
+
+    // Pastikan user tujuan tersedia
+    if (!User::where('id', $receiver_id)->exists()) {
+        return back()->with('error', 'Pengguna tidak ditemukan.');
+    }
+
+ $existingInvite = Invite::whereIn('status', ['pending', 'accepted'])
+    ->where(function ($q) use ($sender_id, $receiver_id) {
+        $q->where(function ($query) use ($sender_id, $receiver_id) {
+            $query->where('sender_id', $sender_id)
+                  ->where('receiver_id', $receiver_id);
+        })
+        ->orWhere(function ($query) use ($sender_id, $receiver_id) {
+            $query->where('sender_id', $receiver_id)
+                  ->where('receiver_id', $sender_id);
+        });
+    })
+    ->first();
+
+    if ($existingInvite) {
+        return back()->with('error', 'Permintaan pertemanan sudah tersedia.');
+    }
+
+    // Simpan permintaan baru
+    Invite::create([
+        'sender_id' => $sender_id,
+        'receiver_id' => $receiver_id,
+        'status' => 'pending',
+    ]);
+
+    return back()->with('success', 'Permintaan pertemanan berhasil dikirim!');
+}
 
     // Terima Permintaan Pertemanan
     public function acceptFriend($id)
     {
-        $request = Invite::where(function ($q) use ($id) {
-                $q->where('id_invite', $id);
-            })
-            ->where('receiver_id', Auth::id())
-            ->firstOrFail();
+    $invite = Invite::where('id_invite', $id)
+        ->where('receiver_id', Auth::id())
+        ->where('status', 'pending')
+        ->firstOrFail();
 
-        $request->update(['status' => 'accepted']);
+    $invite->update([
+        'status' => 'accepted'
+    ]);
 
-        return back()->with('success', 'Permintaan pertemanan diterima!');
+    if (request()->ajax() || request()->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Permintaan pertemanan diterima!'
+        ]);
     }
 
-    // Tolak Permintaan / Hapus Teman (Unfriend)
-    public function removeFriend($id)
-    {
-        $friendship = Invite::where(function ($q) use ($id) {
-            $q->where('sender_id', Auth::id())->where('receiver_id', $id);
-        })->orWhere(function ($q) use ($id) {
-            $q->where('sender_id', $id)->where('receiver_id', Auth::id());
-        })->orWhere('id_invite', $id)->first();
+    return back()->with('success', 'Permintaan pertemanan diterima!');
+}
 
-        if ($friendship) {
-            $friendship->delete();
-        }
+public function removeFriend($id)
+{
+    $invite = Invite::where('id_invite', $id)
+        ->where('receiver_id', Auth::id())
+        ->where('status', 'pending')
+        ->firstOrFail();
 
-        return back()->with('success', 'Data pertemanan berhasil diperbarui.');
+    $invite->delete();
+
+    if (request()->ajax() || request()->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Permintaan pertemanan berhasil ditolak.'
+        ]);
     }
+
+    return back()->with('success', 'Permintaan pertemanan berhasil ditolak.');
+}
 }

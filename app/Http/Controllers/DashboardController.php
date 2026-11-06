@@ -19,7 +19,12 @@ class DashboardController extends Controller
                 $q->where('sender_id', $userId)->orWhere('receiver_id', $userId);
             })->count();
 
-        // 2. Undangan Baru
+        // 2. Permintaan Terkirim (User mengirim permintaan pertemanan)
+        $pendingAddFriendRequestCount = Invite::where('sender_id', $userId)
+            ->where('status', 'pending')
+            ->count();
+
+        // 3. Permintaan Masuk (User mendapatkan permintaan pertemanan)
         $pendingInvites = Invite::with('sender')
             ->where('receiver_id', $userId)
             ->where('status', 'pending')
@@ -27,9 +32,6 @@ class DashboardController extends Controller
             ->get();
 
         $pendingInvitesCount = $pendingInvites->count();
-
-        // 3. Sesi bermain
-        $gamingSessionsThisWeek = 18;
 
         // 4. Chat Terbaru
         $recentChats = User::where('id', '!=', $userId)->get()->map(function ($u) use ($userId) {
@@ -43,9 +45,9 @@ class DashboardController extends Controller
         return view('dashboard', compact(
             'user',
             'activeFriendsCount',
+            'pendingAddFriendRequestCount',
             'pendingInvites',
             'pendingInvitesCount',
-            'gamingSessionsThisWeek',
             'recentChats'
         ));
     }
