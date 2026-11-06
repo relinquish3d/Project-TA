@@ -26,6 +26,7 @@
 
 <body class="bg-[#F8F9FD] min-h-screen text-gray-800 antialiased selection:bg-[#4C49ED] selection:text-white">
 
+    @if(!isset($openChat) || !$openChat)
     <!-- Loading Screen -->
     <div id="pageLoader"
         class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white transition-opacity duration-300">
@@ -34,11 +35,12 @@
         <p class="mt-2 text-sm text-gray-500">Memuat dashboard...</p>
         <div class="mt-5 h-7 w-7 animate-spin rounded-full border-4 border-gray-200 border-t-black"></div>
     </div>
+    @endif
 
     {{--NAVBAR--}}
     <nav class="w-full fixed top-0 left-0 z-50 bg-[#D9D9D9] border-b border-gray-100 shadow-[0_2px_15px_rgba(0,0,0,0.03)] h-18">
         <div class="max-w-10xl mx-auto h-full px-10 flex items-center justify-between">
-            
+
             <!-- Brand Logo -->
             <div class="flex items-center gap-5">
                 <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
@@ -64,7 +66,7 @@
                 </a>
 
                 <!-- Chat -->
-                <a href="{{ route('chat.index') }}" class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
+                <a href="{{ route('chat.index') }}" onclick="event.preventDefault(); openChatSidebar();" class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors cursor-pointer">
                     <i data-lucide="message-square" class="w-4 h-4"></i>
                     <span>Chat</span>
                 </a>
@@ -78,7 +80,7 @@
 
             <!-- Right Profile & Undangan Terbaru Dropdown Button -->
             <div class="flex items-center gap-4">
-                
+
                 {{-- Profile Section --}}
                 <div class="relative">
                     <button id="profileDropdownBtn" class="flex items-center gap-3 p-1 rounded-full hover:bg-gray-300 transition cursor-pointer focus:outline-none">
@@ -147,7 +149,7 @@
                             class="relative w-10 h-10 rounded-full bg-[#D9D9D9] hover:bg-gray-200/80 text-gray-700 flex items-center justify-center transition-all duration-200 cursor-pointer focus:outline-none group"
                             title="Permintaan Berteman">
                         <i data-lucide="user-plus" class="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors"></i>
-                        
+
                         @if(($pendingInvitesCount ?? 0) > 0)
                         <span id="inviteBadge" class="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-[#4C49ED] text-white text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-xs">
                             {{ $pendingInvitesCount }}
@@ -157,7 +159,7 @@
 
                     <!-- Floating Dropdown Permintaan Berteman -->
                     <div id="inviteDropdownMenu" class="hidden absolute right-0 mt-3 w-88 sm:w-96 bg-white border border-gray-150 rounded-2xl shadow-2xl shadow-indigo-950/10 p-5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                        
+
                         <!-- Header Dropdown -->
                         <div class="flex items-center justify-between pb-3.5 border-b border-gray-100">
                             <div class="flex items-center gap-2">
@@ -244,7 +246,7 @@
 
     {{-- Main Content --}}
     <main class="max-w-10xl mx-auto px-6 pt-26 pb-16">
-        
+
         <!-- Welcome Header Banner -->
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-7">
             <div>
@@ -267,9 +269,9 @@
 
         <!-- Grid: 2 Columns Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
-            
+
             <div class="lg:col-span-8 space-y-7">
-                
+
                 <!-- 1. Ringkasan Aktivitas Card -->
                 <div class="bg-white rounded-2xl p-6 sm:p-7 border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.03)]">
                     <h2 class="text-base font-extrabold text-gray-900 mb-5 tracking-tight">
@@ -277,7 +279,7 @@
                     </h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                        
+
                         <!--widget 1: Teman mabar -->
                         <div class="flex items-center gap-4 p-4 rounded-xl bg-[#FAFAFE] border border-gray-100 hover:border-gray-300 transition cursor-pointer group">
                             <div class="w-12 h-12 rounded-xl bg-[#F0EEFF] text-gray-500 group-hover:bg-black group-hover:text-white transition-all flex items-center justify-center shrink-0">
@@ -349,9 +351,9 @@
             <div class="group relative flex flex-col rounded-xl p-2.5 transition-all duration-200 hover:bg-slate-50/80 border border-transparent hover:border-slate-200">
                 <!-- Poster / Cover Game -->
                 <div class="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-slate-100 shadow-sm">
-                    <img 
-                        src="{{ asset($game['image']) }}" 
-                        alt="{{ $game['name'] }}" 
+                    <img
+                        src="{{ asset($game['image']) }}"
+                        alt="{{ $game['name'] }}"
                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                     />
@@ -362,7 +364,7 @@
                     <h3 class="font-bold text-sm text-gray-500 line-clamp-1 group-hover:text-black transition-colors">
                         {{ $game['name'] }}
                     </h3>
-                </div> 
+                </div>
             </div>
         @empty
             <!-- State Kosong jika user belum memilih game -->
@@ -379,22 +381,22 @@
             </div>
             {{-- Fokus pada Chat Terbaru (Opsi 2) --}}
             <div class="lg:col-span-4">
-                
+
                 <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-[0_4px_25px_rgba(0,0,0,0.03)] flex flex-col">
-                    
+
                     <!-- Header Chat Terbaru -->
                     <div class="flex items-center justify-between pb-4 border-b border-gray-100">
                         <h2 class="text-base font-extrabold text-gray-900 tracking-tight">
                             Friend List
                         </h2>
-                        <a href="{{ route('chat.index') }}" class="text-xs font-bold text-gray-500 hover:text-black hover:underline">
+                        <a href="{{ route('chat.index') }}" onclick="event.preventDefault(); openChatSidebar();" class="text-xs font-bold text-[#4C49ED] hover:underline cursor-pointer">
                             Lihat semua
                         </a>
                     </div>
 
                     <!-- Chat List Items -->
                     <div class="divide-y divide-gray-50 mt-2 space-y-1">
-                        
+
                         @if(isset($recentChats) && $recentChats->count() > 0)
                             {{-- Riwayat Chat Nyata dari Database --}}
                             @foreach($recentChats as $chatUser)
@@ -508,6 +510,7 @@
 
                     <!-- Bottom Link -->
                     <div class="mt-4 pt-4 border-t border-gray-100">
+                        <a href="{{ route('chat.index') }}" onclick="event.preventDefault(); openChatSidebar();" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#4C49ED] hover:text-indigo-800 transition cursor-pointer">
                         <a href="{{ route('chat.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-black hover:underline transition">
                             <span>Lihat semua chat</span>
                             <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
@@ -527,16 +530,18 @@
         // Inisialisasi ikon Lucide
         lucide.createIcons();
 
-                // Loading halaman
+        // Loading halaman
         const pageLoader = document.getElementById('pageLoader');
 
-        window.addEventListener('load', function() {
-            pageLoader.classList.add('opacity-0', 'pointer-events-none');
+        if (pageLoader) {
+            window.addEventListener('load', function() {
+                pageLoader.classList.add('opacity-0', 'pointer-events-none');
 
-            setTimeout(function() {
-                pageLoader.classList.add('hidden');
-            }, 300);
-        });
+                setTimeout(function() {
+                    pageLoader.classList.add('hidden');
+                }, 300);
+            });
+        }
 
         // Elemen Dropdown
         const profileDropdownBtn = document.getElementById('profileDropdownBtn');
@@ -554,7 +559,7 @@
                 e.stopPropagation();
                 // Tutup invite dropdown jika terbuka
                 if (inviteDropdownMenu) inviteDropdownMenu.classList.add('hidden');
-                
+
                 const isHidden = profileDropdownMenu.classList.contains('hidden');
                 if (isHidden) {
                     profileDropdownMenu.classList.remove('hidden');
@@ -744,6 +749,9 @@
             });
         });
     </script>
+    {{-- Chat Sidebar Drawer --}}
+    @include('auth.chat.sidebar')
+
 </body>
 
 </html>
